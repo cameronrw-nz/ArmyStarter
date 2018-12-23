@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArmyStarter.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,35 @@ namespace ArmyStarter
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private void OnCreateArmy_Click(object sender, RoutedEventArgs args)
+        {
+            ((MainPageViewModel)DataContext).CreateNewArmy();
+        }
+
+        private void RefreshArmies_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainPageViewModel)DataContext).RefreshProperties();
+        }
+
+        private void OnCreateArmyItem_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainPageViewModel)DataContext).SelectedArmy.CreateNewArmyItem();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var link = ((MainPageViewModel)DataContext).SelectedArmy?.SelectedArmyItem?.Link;
+            if (!string.IsNullOrEmpty(link))
+            {
+                Windows.System.Launcher.LaunchUriAsync(new Uri(link));
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            ((MainPageViewModel)DataContext).SaveArmiesToFile();
         }
     }
 }
