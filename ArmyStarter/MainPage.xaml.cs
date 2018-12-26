@@ -43,7 +43,7 @@ namespace ArmyStarter
             ((MainPageViewModel)DataContext).SelectedArmy.CreateNewArmyItem();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void LaunchLink_Click(object sender, RoutedEventArgs e)
         {
             var link = ((MainPageViewModel)DataContext).SelectedArmy?.SelectedArmyItem?.Link;
             if (!string.IsNullOrEmpty(link))
@@ -52,9 +52,14 @@ namespace ArmyStarter
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void SaveArmies_Click(object sender, RoutedEventArgs e)
         {
             ((MainPageViewModel)DataContext).SaveArmiesToFile();
+        }
+
+        private void OnCreateOption_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyItem.CreateNewOption();
         }
     }
 }

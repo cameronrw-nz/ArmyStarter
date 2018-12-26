@@ -14,7 +14,12 @@ namespace ArmyStarter.ViewModels
         {
             Army = army;
             _armyName = army.Name;
-            ArmyItems = new ObservableCollection<ArmyItemViewModel>(army.HQs.Select(armyItem => new ArmyItemViewModel(armyItem)));
+            ArmyItems = new ObservableCollection<ArmyItemViewModel>(army.HQs.Select(armyItem =>
+            {
+                var armyVM = new ArmyItemViewModel(armyItem);
+                armyVM.PropertyChanged += SelectedArmyItem_PropertyChanged;
+                return armyVM;
+            }));
         }
 
         public Army Army { get; set; }
@@ -37,7 +42,7 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                var armyCost = ArmyItems.Select(armyItem => armyItem.Cost).ToArray().Sum();
+                var armyCost = ArmyItems.Select(armyItem => armyItem.TotalCost).ToArray().Sum();
                 return $"{armyCost} THB";
             }
         }

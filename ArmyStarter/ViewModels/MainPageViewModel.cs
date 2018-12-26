@@ -109,7 +109,18 @@ namespace ArmyStarter.ViewModels
                     foreach (ArmyViewModel armyVM in Armies)
                     {
                         var army = armyVM.Army;
-                        army.HQs = armyVM.ArmyItems.Select(armyItem => armyItem.ArmyItem).ToList();
+                        army.HQs.Clear();
+
+                        var armyItems = new List<ArmyItem>();
+                        foreach (ArmyItemViewModel armyItemVM in armyVM.ArmyItems)
+                        {
+                            var armyItem = armyItemVM.ArmyItem;
+
+                            armyItem.Options = armyItemVM.Options.Select(option => option.Option).ToList();
+
+                            army.HQs.Add(armyItemVM.ArmyItem);
+                        }
+
                         armies.Add(army);
                     }
                     xs.Serialize(tw, armies);

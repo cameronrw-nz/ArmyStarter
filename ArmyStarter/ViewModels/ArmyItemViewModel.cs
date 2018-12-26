@@ -1,12 +1,17 @@
 ﻿using ArmyStarter.Models;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace ArmyStarter.ViewModels
 {
     public class ArmyItemViewModel : ViewModelBase
     {
+        private OptionViewModel _selectedOption;
+
         public ArmyItemViewModel(ArmyItem armyItem)
         {
             ArmyItem = armyItem;
+            Options = new ObservableCollection<OptionViewModel>(armyItem.Options.Select(option => new OptionViewModel(option)));
         }
 
         public ArmyItem ArmyItem { get; set; }
@@ -50,6 +55,15 @@ namespace ArmyStarter.ViewModels
             {
                 ArmyItem.Cost = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(TotalCost));
+            }
+        }
+
+        public int TotalCost
+        {
+            get
+            {
+                return Cost + Options.Sum(option => option.Cost);
             }
         }
 
@@ -65,6 +79,38 @@ namespace ArmyStarter.ViewModels
                 ArmyItem.Link = value;
                 OnPropertyChanged();
             }
+        }
+
+        public ObservableCollection<OptionViewModel> Options { get; set; }
+
+        public OptionViewModel SelectedOption
+        {
+            get
+            {
+                return _selectedOption;
+            }
+
+            set
+            {
+                _selectedOption = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void CreateNewOption()
+        {
+            var newOption = new OptionViewModel(new Option());
+            newOption.PropertyChanged += SelectedOption_PropertyChanged;
+
+            Options.Add(newOption);
+
+            SelectedOption = newOption;
+        }
+
+        private void SelectedOption_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(SelectedOption));
+            OnPropertyChanged(nameof(Cost));
         }
     }
 }

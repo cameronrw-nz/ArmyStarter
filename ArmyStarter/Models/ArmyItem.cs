@@ -1,31 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ArmyStarter.Models
 {
-    public class ArmyItem
+    public class ArmyItem : Item
     {
-        public ArmyItem()
+        public ArmyItem() : base()
         {
         }
 
-        public string Name { get; set; }
-
         public int PointsValue { get; set; }
-
-        public int Cost { get; set; }
 
         public int TotalCost
         {
             get
             {
-                return Cost;
+                return Cost + Options.Sum(option => option.Cost);
             }
         }
 
-        public string Link { get; set; }
-
         public List<string> Notes { get; set; }
 
-        public List<ArmyItem> Accessories { get; set; }
+        public List<Option> Options { get; set; } = new List<Option>();
     }
 }
