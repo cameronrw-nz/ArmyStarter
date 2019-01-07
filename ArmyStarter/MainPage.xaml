@@ -12,46 +12,80 @@
     <Page.DataContext>
         <viewmodels:MainPageViewModel/>
     </Page.DataContext>
-    <Grid HorizontalAlignment="Center" Height="1000" Margin="0,0,0,0" VerticalAlignment="Center" Width="1500">
-        <Grid HorizontalAlignment="Left" Height="1000" Margin="0,0,0,0" VerticalAlignment="Center" Width="500">
-            <Button Content="Create New Army" HorizontalAlignment="Left" Margin="10,958,0,0" VerticalAlignment="Top" Click="OnCreateArmy_Click"/>
-            <Button Content="Save Armies" HorizontalAlignment="Left" Margin="389,958,0,0" VerticalAlignment="Top" Click="SaveArmies_Click"/>
-            <ListView HorizontalAlignment="Center" 
-                      Height="937"
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Content="Create New Army" Grid.Row="1" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Top" Click="OnCreateArmy_Click"/>
+            <Button Content="Save Armies" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Top" Click="SaveArmies_Click"/>
+            <ListView HorizontalAlignment="Stretch" 
+                      Grid.Row="0" 
                       ItemsSource="{Binding Armies, Mode=TwoWay}"
                       SelectedValue="{Binding SelectedArmy, Mode=TwoWay}"
                       SelectionMode="Single"
-                      Margin="0,10,0,0"
-                      VerticalAlignment="Top" 
-                      Width="480">
+                      Margin="10,10,10,0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewmodels:ArmyViewModel">
-                        <Grid>
-                            <TextBlock Text="{Binding ArmyName, Mode=TwoWay}"/>
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" MinWidth="80" />
+                                <ColumnDefinition Width="Auto" MinWidth="80"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding ArmyName, Mode=TwoWay}" HorizontalAlignment="Left"/>
+                            <TextBlock Grid.Column="1" Text="{Binding ArmyPointsValue, Mode=TwoWay}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" Text="{Binding ArmyCost, Mode=TwoWay}" HorizontalAlignment="Right"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </Grid>
-        <Grid DataContext="{Binding SelectedArmy}" HorizontalAlignment="Left" Height="1000" Margin="500,0,0,0" VerticalAlignment="Top" Width="500">
-            <TextBox HorizontalAlignment="Left" Margin="10,10,0,0" Text="{Binding ArmyName, Mode=TwoWay}" VerticalAlignment="Top" Width="180" PlaceholderText="Enter Army Name:"/>
-            <TextBlock HorizontalAlignment="Left" Margin="424,16,0,0" Text="{Binding ArmyCost, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="80"/>
-            <TextBlock HorizontalAlignment="Left" Margin="341,16,0,0" Text="{Binding ArmyPointsValue, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Height="22"/>
-            <ListView HorizontalAlignment="Center" 
-                      Height="895"
+        <Grid Grid.Column="1" DataContext="{Binding SelectedArmy}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" MinWidth="80" />
+                    <ColumnDefinition Width="Auto" MinWidth="80"/>
+                </Grid.ColumnDefinitions>
+                <TextBox  Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" Text="{Binding ArmyName, Mode=TwoWay}" VerticalAlignment="Top" Width="180" PlaceholderText="Enter Army Name:"/>
+                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0,16,0,0" Text="{Binding ArmyCost, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="80"/>
+                <TextBlock Grid.Column="2" HorizontalAlignment="Right" Margin="0,16,0,0" Text="{Binding ArmyPointsValue, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" Height="22"/>
+            </Grid>
+            <ListView Grid.Row="1" 
+                      HorizontalAlignment="Stretch" 
                       ItemsSource="{Binding ArmyItems, Mode=TwoWay}"
                       SelectedValue="{Binding SelectedArmyItem, Mode=TwoWay}"
                       SelectionMode="Single"
-                      Margin="0,47,0,0"
-                      VerticalAlignment="Top" 
-                      Width="480">
+                      Margin="10,10,10,0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewmodels:ArmyItemViewModel">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="270" />
-                                <ColumnDefinition Width="80" />
-                                <ColumnDefinition Width="90" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" MinWidth="80" />
+                                <ColumnDefinition Width="Auto" MinWidth="90" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding Name, Mode=TwoWay}"/>
                             <TextBlock Grid.Column="1" Text="{Binding PointsValue, Mode=TwoWay}" HorizontalAlignment="Right"/>
@@ -60,31 +94,72 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Content="Create New Army Item" HorizontalAlignment="Left" Margin="10,958,0,0" VerticalAlignment="Top" Click="OnCreateArmyItem_Click"/>
+            <Button Grid.Row="2" Content="Create New Army Item" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" Click="OnCreateArmyItem_Click"/>
         </Grid>
-        <Grid DataContext="{Binding SelectedArmy.SelectedArmyItem}" HorizontalAlignment="Left" Height="1000" Margin="1000,0,0,0" VerticalAlignment="Top" Width="500">
-            <TextBox HorizontalAlignment="Left" Margin="110,10,0,0" Text="{Binding Name, Mode=TwoWay}" VerticalAlignment="Top" Width="240"/>
-            <TextBox HorizontalAlignment="Left" Margin="110,47,0,0" Text="{Binding PointsValue, Mode=TwoWay}" VerticalAlignment="Top" Width="240"/>
-            <TextBox HorizontalAlignment="Left" Margin="110,84,0,0" Text="{Binding Cost, Mode=TwoWay}" VerticalAlignment="Top" Width="240"/>
-            <TextBox HorizontalAlignment="Left" Margin="110 ,121,150,0" Text="{Binding Link, Mode=TwoWay}" VerticalAlignment="Top" Width="240"/>
-            <Button Content="Navigate" Click="LaunchLink_Click" HorizontalAlignment="Left" Margin="377,121,0,0" VerticalAlignment="Top" Width="97"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,16,0,0" Text="Name:" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,53,0,0" Text="Price:" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,90,0,0" Text="Points Value:" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,127,0,0" Text="Link:" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <ListView HorizontalAlignment="Left" 
-                      Height="204" 
+        <Grid Grid.Column="2" DataContext="{Binding SelectedArmy.SelectedArmyItem}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="90" />
+                    <ColumnDefinition Width="*" MinWidth="100" MaxWidth="240"/>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Margin="5,15,0,0" Text="Name:" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,15,0,0" Text="Price:" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="0" Grid.Row="2" Margin="5,15,0,0" Text="Points Value:" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="0" Grid.Row="3" Margin="5,15,0,0" Text="Link:" TextWrapping="Wrap" />
+                <TextBox Grid.Column="1" Grid.Row="0" Margin="20,10,20,5" Text="{Binding Name, Mode=TwoWay}" />
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="20,10,20,5" Text="{Binding PointsValue, Mode=TwoWay}" />
+                <TextBox Grid.Column="1" Grid.Row="2" Margin="20,10,20,5" Text="{Binding Cost, Mode=TwoWay}" />
+                <TextBox Grid.Column="1" Grid.Row="3" Margin="20,10,20,5" Text="{Binding Link, Mode=TwoWay}" />
+                <Button Grid.Column="2" Grid.Row="3" Margin="0,10,20,5" Content="Navigate" Click="LaunchLink_Click" Width="100"/>
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MinWidth="90"/>
+                    <ColumnDefinition Width="*" MinWidth="100" MaxWidth="240"/>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="5,10,0,0" Text="Additional Purchases:" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,10,0,0" Text="Name:" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="0" Grid.Row="2" Margin="5,10,0,0" Text="Cost:" TextWrapping="Wrap" />
+                <TextBox Grid.Column="1" Grid.Row="1" Margin="20,5,20,5" Text="{Binding SelectedOption.Name, Mode=TwoWay}" />
+                <TextBox Grid.Column="1" Grid.Row="2" Margin="20,5,20,5" Text="{Binding SelectedOption.Cost, Mode=TwoWay}" />
+                <Button Grid.Column="2" Grid.Row="2" Margin="0,5,20,5" Content="Add Option" Click="OnCreateOption_Click" Width="100"/>
+            </Grid>
+            <ListView Grid.Row="2"
+                      HorizontalAlignment="Stretch" 
                       ItemsSource="{Binding Options}"
                       SelectedValue="{Binding SelectedOption, Mode=TwoWay}"
-                      Margin="10,289,0,0" 
-                      VerticalAlignment="Top" 
-                      Width="464">
+                      Margin="10,10,10,0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="viewmodels:OptionViewModel">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="270" />
-                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding Name, Mode=TwoWay}"/>
                             <TextBlock Grid.Column="1" Text="{Binding Cost, Mode=TwoWay}" HorizontalAlignment="Right"/>
@@ -92,12 +167,6 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Content="Add Option" Click="OnCreateOption_Click" HorizontalAlignment="Left" Margin="377,242,0,0" VerticalAlignment="Top" Width="97"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,174,0,0" Text="Additional Purchases:" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,211,0,0" Text="Name:" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <TextBox HorizontalAlignment="Left" Margin="110,205,0,0" Text="{Binding SelectedOption.Name, Mode=TwoWay}" VerticalAlignment="Top" Width="240"/>
-            <TextBox HorizontalAlignment="Left" Margin="110,242,0,0" Text="{Binding SelectedOption.Cost, Mode=TwoWay}" VerticalAlignment="Top" Width="240"/>
-            <TextBlock HorizontalAlignment="Left" Margin="10,248,0,0" Text="Cost:" TextWrapping="Wrap" VerticalAlignment="Top"/>
         </Grid>
     </Grid>
 </Page>
