@@ -58,6 +58,36 @@ namespace ArmyStarter.ViewModels
             SelectedArmy = newArmy;
         }
 
+        internal void RemoveArmy()
+        {
+            _armies.Remove(SelectedArmy);
+            SelectedArmy = null;
+
+            OnPropertyChanged(nameof(Armies));
+        }
+
+        internal void CopyArmy()
+        {
+            var army = SelectedArmy.Army;
+            army.HQs.Clear();
+
+            var armyItems = new List<ArmyItem>();
+            foreach (ArmyItemViewModel armyItemVM in SelectedArmy.ArmyItems)
+            {
+                var armyItem = armyItemVM.ArmyItem;
+
+                armyItem.Options = armyItemVM.Options.Select(option => option.Option).ToList();
+
+                army.HQs.Add(armyItemVM.ArmyItem);
+            }
+
+            var copiedArmy = new ArmyViewModel(StaticHelper.DeepClone(army));
+
+            Armies.Add(copiedArmy);
+
+            SelectedArmy = copiedArmy;
+        }
+
         public void RefreshProperties()
         {
             OnPropertyChanged(nameof(SelectedArmy));

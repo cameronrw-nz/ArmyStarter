@@ -23,8 +23,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Button Content="Create New Army" Grid.Row="1" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Top" Click="OnCreateArmy_Click"/>
-            <Button Content="Save Armies" Grid.Row="1" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Top" Click="SaveArmies_Click"/>
             <ListView HorizontalAlignment="Stretch" 
                       Grid.Row="0" 
                       ItemsSource="{Binding Armies, Mode=TwoWay}"
@@ -51,6 +49,18 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button Content="Create New Army" Grid.Column="0" HorizontalAlignment="Left" Margin="10,0,0,10" Click="OnCreateArmy_Click"/>
+                <Button Content="Copy Army" Grid.Column="1" HorizontalAlignment="Left" Margin="5,0,0,10" Click="OnCopyArmy_Click"/>
+                <Button Content="Remove Army" Grid.Column="2" HorizontalAlignment="Left" Margin="5,0,0,10" Click="OnRemoveArmy_Click"/>
+                <Button Content="Save Armies" Grid.Column="3" HorizontalAlignment="Right" Margin="0,0,10,10" Click="SaveArmies_Click"/>
+            </Grid>
         </Grid>
         <Grid Grid.Column="1" DataContext="{Binding SelectedArmy}">
             <Grid.RowDefinitions>
@@ -62,7 +72,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" MinWidth="80" />
-                    <ColumnDefinition Width="Auto" MinWidth="80"/>
+                    <ColumnDefinition Width="Auto" MinWidth="80" />
                 </Grid.ColumnDefinitions>
                 <TextBox  Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" Text="{Binding ArmyName, Mode=TwoWay}" VerticalAlignment="Top" Width="180" PlaceholderText="Enter Army Name:"/>
                 <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0,16,0,0" Text="{Binding ArmyCost, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="80"/>
@@ -94,7 +104,16 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-            <Button Grid.Row="2" Content="Create New Army Item" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" Click="OnCreateArmyItem_Click"/>
+            <Grid Grid.Row="2" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Content="Create New Army Item" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,10" Click="OnCreateArmyItem_Click"/>
+                <Button Content="Copy Army Item" Grid.Column="1" HorizontalAlignment="Left" Margin="5,10,0,10" Click="OnCopyArmyItem_Click"/>
+                <Button Content="Remove Army Item" Grid.Column="2" HorizontalAlignment="Left" Margin="5,10,0,10" Click="OnRemoveArmyItem_Click"/>
+            </Grid>
         </Grid>
         <Grid Grid.Column="2" DataContext="{Binding SelectedArmy.SelectedArmyItem}">
             <Grid.RowDefinitions>

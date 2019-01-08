@@ -10,6 +10,10 @@ namespace ArmyStarter.ViewModels
         private ObservableCollection<ArmyItemViewModel> _armyItems;
         private ArmyItemViewModel _selectedArmyItem;
 
+        public ArmyViewModel()
+        {
+        }
+
         public ArmyViewModel(Army army)
         {
             Army = army;
@@ -92,6 +96,26 @@ namespace ArmyStarter.ViewModels
             ArmyItems.Add(newArmyItem);
 
             SelectedArmyItem = newArmyItem;
+        }
+
+        internal void RemoveArmyItem()
+        {
+            _armyItems.Remove(SelectedArmyItem);
+            SelectedArmyItem = null;
+
+            OnPropertyChanged(nameof(ArmyItems));
+        }
+
+        internal void CopyArmyItem()
+        {
+            var armyItem = SelectedArmyItem.ArmyItem;
+            armyItem.Options = SelectedArmyItem.Options.Select(option => option.Option).ToList();
+
+            var copiedArmyItem = new ArmyItemViewModel(StaticHelper.DeepClone(armyItem));
+
+            ArmyItems.Add(copiedArmyItem);
+
+            SelectedArmyItem = copiedArmyItem;
         }
 
         private void SelectedArmyItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

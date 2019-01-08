@@ -33,6 +33,16 @@ namespace ArmyStarter
             ((MainPageViewModel)DataContext).CreateNewArmy();
         }
 
+        private void OnCopyArmy_Click(object sender, RoutedEventArgs args)
+        {
+            ((MainPageViewModel)DataContext).CopyArmy();
+        }
+
+        private void OnRemoveArmy_Click(object sender, RoutedEventArgs args)
+        {
+            ((MainPageViewModel)DataContext).RemoveArmy();
+        }
+
         private void RefreshArmies_Click(object sender, RoutedEventArgs e)
         {
             ((MainPageViewModel)DataContext).RefreshProperties();
@@ -41,6 +51,16 @@ namespace ArmyStarter
         private void OnCreateArmyItem_Click(object sender, RoutedEventArgs e)
         {
             ((MainPageViewModel)DataContext).SelectedArmy.CreateNewArmyItem();
+        }
+
+        private void OnCopyArmyItem_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainPageViewModel)DataContext).SelectedArmy.CopyArmyItem();
+        }
+
+        private void OnRemoveArmyItem_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainPageViewModel)DataContext).SelectedArmy.RemoveArmyItem();
         }
 
         private void LaunchLink_Click(object sender, RoutedEventArgs e)
