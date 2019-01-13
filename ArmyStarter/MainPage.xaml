@@ -2,16 +2,20 @@
     x:Class="ArmyStarter.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ArmyStarter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:ArmyStarter.Models"
     xmlns:viewmodels="using:ArmyStarter.ViewModels"
+    xmlns:converters="using:ArmyStarter.Helpers"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.DataContext>
         <viewmodels:MainPageViewModel/>
     </Page.DataContext>
+    
+    <Page.Resources>
+        <converters:StringFormatConverter x:Key="StringFormatter" />
+    </Page.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -98,8 +102,8 @@
                                 <ColumnDefinition Width="Auto" MinWidth="90" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding Name, Mode=TwoWay}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding PointsValue, Mode=TwoWay}" HorizontalAlignment="Right"/>
-                            <TextBlock Grid.Column="2" Text="{Binding TotalCost, Mode=TwoWay}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="1" Text="{Binding PointsValue, Mode=TwoWay, Converter={StaticResource StringFormatter}, ConverterParameter='{}{0} Pts'}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="2" Text="{Binding TotalCost, Mode=TwoWay, Converter={StaticResource StringFormatter}, ConverterParameter='{}{0} ฿'}" HorizontalAlignment="Right"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -164,7 +168,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding Name, Mode=TwoWay}"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Cost, Mode=TwoWay}" HorizontalAlignment="Right"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Cost, Mode=TwoWay, Converter={StaticResource StringFormatter}, ConverterParameter='{}{0} ฿'}" HorizontalAlignment="Right"/>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -176,6 +180,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -191,8 +196,10 @@
                 </Grid>
                 <TextBlock Grid.Column="0" Grid.Row="1" Margin="5,10,0,0" Text="Name:" TextWrapping="Wrap" />
                 <TextBlock Grid.Column="0" Grid.Row="2" Margin="5,10,0,0" Text="Cost:" TextWrapping="Wrap" />
+                <TextBlock Grid.Column="0" Grid.Row="3" Margin="5,15,0,0" Text="Link:" TextWrapping="Wrap" />
                 <TextBox Grid.Column="1" Grid.Row="1" Margin="20,5,20,5" Text="{Binding SelectedOption.Name, Mode=TwoWay}" />
                 <TextBox Grid.Column="1" Grid.Row="2" Margin="20,5,20,5" Text="{Binding SelectedOption.Cost, Mode=TwoWay}" />
+                <TextBox Grid.Column="1" Grid.Row="3" Margin="20,10,20,5" Text="{Binding SelectedOption.Link, Mode=TwoWay}" />
             </Grid>
         </Grid>
     </Grid>
