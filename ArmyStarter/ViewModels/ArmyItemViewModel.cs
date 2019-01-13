@@ -1,4 +1,5 @@
 ﻿using ArmyStarter.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -7,6 +8,7 @@ namespace ArmyStarter.ViewModels
     public class ArmyItemViewModel : ViewModelBase
     {
         private OptionViewModel _selectedOption;
+        private ObservableCollection<OptionViewModel> _options;
 
         public ArmyItemViewModel(ArmyItem armyItem)
         {
@@ -81,7 +83,18 @@ namespace ArmyStarter.ViewModels
             }
         }
 
-        public ObservableCollection<OptionViewModel> Options { get; set; }
+        public ObservableCollection<OptionViewModel> Options {
+            get
+            {
+                return _options;
+            }
+
+            set
+            {
+                _options = value;
+                OnPropertyChanged();
+            }
+        }
 
         public OptionViewModel SelectedOption
         {
@@ -105,6 +118,14 @@ namespace ArmyStarter.ViewModels
             Options.Add(newOption);
 
             SelectedOption = newOption;
+        }
+
+        internal void RemoveOption()
+        {
+            _options.Remove(SelectedOption);
+            SelectedOption = null;
+
+            OnPropertyChanged(nameof(Options));
         }
 
         private void SelectedOption_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

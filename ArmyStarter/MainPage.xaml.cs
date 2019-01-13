@@ -81,5 +81,10 @@ namespace ArmyStarter
         {
             ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyItem.CreateNewOption();
         }
+
+        private void OnRemoveOption_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyItem.RemoveOption();
+        }
     }
 }
