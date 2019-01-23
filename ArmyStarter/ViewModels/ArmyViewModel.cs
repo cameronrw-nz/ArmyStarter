@@ -104,6 +104,8 @@ namespace ArmyStarter.ViewModels
             SelectedArmyItem = null;
 
             OnPropertyChanged(nameof(ArmyItems));
+            OnPropertyChanged(nameof(ArmyCost));
+            OnPropertyChanged(nameof(ArmyPointsValue));
         }
 
         internal void CopyArmyItem()
@@ -116,6 +118,9 @@ namespace ArmyStarter.ViewModels
             ArmyItems.Add(copiedArmyItem);
 
             SelectedArmyItem = copiedArmyItem;
+
+            OnPropertyChanged(nameof(ArmyCost));
+            OnPropertyChanged(nameof(ArmyPointsValue));
         }
 
         private void SelectedArmyItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

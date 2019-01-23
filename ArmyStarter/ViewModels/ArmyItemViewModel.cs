@@ -126,6 +126,8 @@ namespace ArmyStarter.ViewModels
             SelectedOption = null;
 
             OnPropertyChanged(nameof(Options));
+            OnPropertyChanged(nameof(Cost));
+            OnPropertyChanged(nameof(PointsValue));
         }
 
         private void SelectedOption_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

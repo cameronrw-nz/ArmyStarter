@@ -115,7 +115,7 @@ namespace ArmyStarter.ViewModels
             }
             else
             {
-                var army = new Army { Name = "Default Army" };
+                var army = new Army { Name = "Default Army", HQs = new List<ArmyItem> { new ArmyItem() { Name = "This is an example army item", Cost = 1000, PointsValue = 190, Options = new List<Option> { new Option { Name = "example option", Cost = 100 } } } } };
                 var defaultArmy = new ArmyViewModel(army);
                 Armies = new ObservableCollection<ArmyViewModel> { defaultArmy };
             }
