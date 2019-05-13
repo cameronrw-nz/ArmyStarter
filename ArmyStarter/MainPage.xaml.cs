@@ -86,5 +86,14 @@ namespace ArmyStarter
         {
             ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyItem.RemoveOption();
         }
+
+        private void OnArmyLink_Click(object sender, RoutedEventArgs e)
+        {
+            var link = ((ArmyItemViewModel)((Button)sender).DataContext)?.Link;
+            if (!string.IsNullOrEmpty(link))
+            {
+                Windows.System.Launcher.LaunchUriAsync(new Uri(link));
+            }
+        }
     }
 }

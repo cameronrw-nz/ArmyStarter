@@ -16,8 +16,9 @@ namespace ArmyStarter.ViewModels
 
         public ArmyViewModel(Army army)
         {
-            Army = army;
             _armyName = army.Name;
+
+            Army = army;
             ArmyItems = new ObservableCollection<ArmyItemViewModel>(army.HQs.Select(armyItem =>
             {
                 var armyVM = new ArmyItemViewModel(armyItem);
