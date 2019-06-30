@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ArmyStarter.Models
 {
-    public class ArmyItem : Item
+    public class ArmyUnit : Item
     {
-        public ArmyItem() : base()
+        public ArmyUnit() : base()
         {
+            ArmyUnitId = Guid.NewGuid();
         }
+
+        public Guid ArmyId { get; set; }
 
         public int PointsValue { get; set; }
 
@@ -19,8 +23,10 @@ namespace ArmyStarter.Models
             }
         }
 
-        public List<string> Notes { get; set; }
+        public List<Note> Notes { get; set; } = new List<Note>();
 
         public List<Option> Options { get; set; } = new List<Option>();
+
+        public Guid ArmyUnitId { get; set; }
     }
 }

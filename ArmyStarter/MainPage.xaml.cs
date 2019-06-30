@@ -74,7 +74,7 @@ namespace ArmyStarter
 
         private void SaveArmies_Click(object sender, RoutedEventArgs e)
         {
-            ((MainPageViewModel)DataContext).SaveArmiesToFile();
+            ((MainPageViewModel)DataContext).SaveArmies();
         }
 
         private void OnCreateOption_Click(object sender, RoutedEventArgs e)
@@ -89,7 +89,7 @@ namespace ArmyStarter
 
         private void OnArmyLink_Click(object sender, RoutedEventArgs e)
         {
-            var link = ((ArmyItemViewModel)((Button)sender).DataContext)?.Link;
+            var link = ((ArmyUnitViewModel)((Button)sender).DataContext)?.Link;
             if (!string.IsNullOrEmpty(link))
             {
                 Windows.System.Launcher.LaunchUriAsync(new Uri(link));

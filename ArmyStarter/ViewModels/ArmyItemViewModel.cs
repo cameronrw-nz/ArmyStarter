@@ -5,29 +5,29 @@ using System.Linq;
 
 namespace ArmyStarter.ViewModels
 {
-    public class ArmyItemViewModel : ViewModelBase
+    public class ArmyUnitViewModel : ViewModelBase
     {
         private OptionViewModel _selectedOption;
         private ObservableCollection<OptionViewModel> _options;
 
-        public ArmyItemViewModel(ArmyItem armyItem)
+        public ArmyUnitViewModel(ArmyUnit armyItem)
         {
-            ArmyItem = armyItem;
+            ArmyUnit = armyItem;
             Options = new ObservableCollection<OptionViewModel>(armyItem.Options.Select(option => new OptionViewModel(option)));
         }
 
-        public ArmyItem ArmyItem { get; set; }
+        public ArmyUnit ArmyUnit { get; set; }
 
         public string Name
         {
             get
             {
-                return ArmyItem.Name;
+                return ArmyUnit.Name;
             }
 
             set
             {
-                ArmyItem.Name = value;
+                ArmyUnit.Name = value;
                 OnPropertyChanged();
             }
         }
@@ -36,12 +36,12 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                return ArmyItem.PointsValue;
+                return ArmyUnit.PointsValue;
             }
 
             set
             {
-                ArmyItem.PointsValue = value;
+                ArmyUnit.PointsValue = value;
                 OnPropertyChanged();
             }
         }
@@ -50,12 +50,12 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                return ArmyItem.Cost;
+                return ArmyUnit.Cost;
             }
 
             set
             {
-                ArmyItem.Cost = value;
+                ArmyUnit.Cost = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(TotalCost));
             }
@@ -73,12 +73,12 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                return ArmyItem.Link;
+                return ArmyUnit.Link;
             }
 
             set
             {
-                ArmyItem.Link = value;
+                ArmyUnit.Link = value;
                 OnPropertyChanged();
             }
         }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace ArmyStarter.Models
+namespace ArmyStarter.Blazor.Models
 {
     public class Army
     {
@@ -11,8 +13,6 @@ namespace ArmyStarter.Models
         }
 
         public string Name { get; set; }
-
-        public List<ArmyUnit> ArmyUnits { get; set; } = new List<ArmyUnit>();
 
         public Guid ArmyId { get; set; }
     }

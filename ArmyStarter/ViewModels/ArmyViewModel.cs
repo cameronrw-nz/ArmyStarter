@@ -7,8 +7,8 @@ namespace ArmyStarter.ViewModels
     public class ArmyViewModel : ViewModelBase
     {
         private string _armyName;
-        private ObservableCollection<ArmyItemViewModel> _armyItems;
-        private ArmyItemViewModel _selectedArmyItem;
+        private ObservableCollection<ArmyUnitViewModel> _armyItems;
+        private ArmyUnitViewModel _selectedArmyItem;
 
         public ArmyViewModel()
         {
@@ -19,9 +19,9 @@ namespace ArmyStarter.ViewModels
             _armyName = army.Name;
 
             Army = army;
-            ArmyItems = new ObservableCollection<ArmyItemViewModel>(army.HQs.Select(armyItem =>
+            ArmyUnits = new ObservableCollection<ArmyUnitViewModel>(army.ArmyUnits.Select(armyItem =>
             {
-                var armyVM = new ArmyItemViewModel(armyItem);
+                var armyVM = new ArmyUnitViewModel(armyItem);
                 armyVM.PropertyChanged += SelectedArmyItem_PropertyChanged;
                 return armyVM;
             }));
@@ -47,7 +47,7 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                var armyCost = ArmyItems.Select(armyItem => armyItem.TotalCost).ToArray().Sum();
+                var armyCost = ArmyUnits.Select(armyItem => armyItem.TotalCost).ToArray().Sum();
                 return $"{armyCost} THB";
             }
         }
@@ -56,12 +56,12 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                var totalPoints = ArmyItems.Select(armyItem => armyItem.PointsValue).ToArray().Sum();
+                var totalPoints = ArmyUnits.Select(armyItem => armyItem.PointsValue).ToArray().Sum();
                 return $"{totalPoints} Pts";
             }
         }
 
-        public ObservableCollection<ArmyItemViewModel> ArmyItems
+        public ObservableCollection<ArmyUnitViewModel> ArmyUnits
         {
             get
             {
@@ -75,7 +75,7 @@ namespace ArmyStarter.ViewModels
             }
         }
 
-        public ArmyItemViewModel SelectedArmyItem
+        public ArmyUnitViewModel SelectedArmyItem
         {
             get
             {
@@ -91,10 +91,10 @@ namespace ArmyStarter.ViewModels
 
         public void CreateNewArmyItem()
         {
-            var newArmyItem = new ArmyItemViewModel(new ArmyItem());
+            var newArmyItem = new ArmyUnitViewModel(new ArmyUnit());
             newArmyItem.PropertyChanged += SelectedArmyItem_PropertyChanged;
 
-            ArmyItems.Add(newArmyItem);
+            ArmyUnits.Add(newArmyItem);
 
             SelectedArmyItem = newArmyItem;
         }
@@ -104,19 +104,19 @@ namespace ArmyStarter.ViewModels
             _armyItems.Remove(SelectedArmyItem);
             SelectedArmyItem = null;
 
-            OnPropertyChanged(nameof(ArmyItems));
+            OnPropertyChanged(nameof(ArmyUnits));
             OnPropertyChanged(nameof(ArmyCost));
             OnPropertyChanged(nameof(ArmyPointsValue));
         }
 
         internal void CopyArmyItem()
         {
-            var armyItem = SelectedArmyItem.ArmyItem;
+            var armyItem = SelectedArmyItem.ArmyUnit;
             armyItem.Options = SelectedArmyItem.Options.Select(option => option.Option).ToList();
 
-            var copiedArmyItem = new ArmyItemViewModel(StaticHelper.DeepClone(armyItem));
+            var copiedArmyItem = new ArmyUnitViewModel(StaticHelper.DeepClone(armyItem));
 
-            ArmyItems.Add(copiedArmyItem);
+            ArmyUnits.Add(copiedArmyItem);
 
             SelectedArmyItem = copiedArmyItem;
 

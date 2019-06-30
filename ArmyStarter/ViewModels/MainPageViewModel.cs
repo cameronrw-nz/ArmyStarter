@@ -1,23 +1,22 @@
 ﻿using ArmyStarter.Models;
-using System;
+using ArmyStarter.Providers;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Xml.Serialization;
-using Windows.Storage;
 
 namespace ArmyStarter.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+        private readonly IArmyProvider _armyProvider;
         private ObservableCollection<ArmyViewModel> _armies;
         private ArmyViewModel _selectedArmy;
 
-        public MainPageViewModel()
+        public MainPageViewModel(IArmyProvider armyProvider)
         {
-            Armies = new ObservableCollection<ArmyViewModel>();
+            _armyProvider = armyProvider;
 
+            Armies = new ObservableCollection<ArmyViewModel>();
             InitiliseMainPage();
         }
 
@@ -33,7 +32,7 @@ namespace ArmyStarter.ViewModels
                 _armies = value;
                 OnPropertyChanged();
             }
-        } 
+        }
 
         public ArmyViewModel SelectedArmy
         {
@@ -68,17 +67,17 @@ namespace ArmyStarter.ViewModels
 
         internal void CopyArmy()
         {
-            var army = SelectedArmy.Army;
-            army.HQs.Clear();
+            Army army = SelectedArmy.Army;
+            army.ArmyUnits.Clear();
 
-            var armyItems = new List<ArmyItem>();
-            foreach (ArmyItemViewModel armyItemVM in SelectedArmy.ArmyItems)
+            var armyItems = new List<ArmyUnit>();
+            foreach (ArmyUnitViewModel armyItemVM in SelectedArmy.ArmyUnits)
             {
-                var armyItem = armyItemVM.ArmyItem;
+                ArmyUnit armyItem = armyItemVM.ArmyUnit;
 
                 armyItem.Options = armyItemVM.Options.Select(option => option.Option).ToList();
 
-                army.HQs.Add(armyItemVM.ArmyItem);
+                army.ArmyUnits.Add(armyItemVM.ArmyUnit);
             }
 
             var copiedArmy = new ArmyViewModel(StaticHelper.DeepClone(army));
@@ -96,66 +95,35 @@ namespace ArmyStarter.ViewModels
 
         private async void InitiliseMainPage()
         {
-            XmlSerializer xs = new XmlSerializer(typeof(List<Army>));
+            IEnumerable<Army> armies = _armyProvider.GetArmies();
 
-            StorageFile file = (StorageFile)await ApplicationData.Current.LocalFolder.TryGetItemAsync("settings.xml");
-            if (file != null)
+            foreach (Army army in armies)
             {
-                using (Stream stream = await file.OpenStreamForReadAsync())
-                {
-                    using (TextReader tr = new StreamReader(stream))
-                    {
-                        var armies = (List<Army>)xs.Deserialize(tr);
-                        foreach (Army army in armies)
-                        {
-                            Armies.Add(new ArmyViewModel(army));
-                        }
-                    }
-                }
-            }
-            else
-            {
-                var army = new Army { Name = "Default Army", HQs = new List<ArmyItem> { new ArmyItem() { Name = "This is an example army item", Cost = 1000, PointsValue = 190, Options = new List<Option> { new Option { Name = "example option", Cost = 100 } } } } };
-                var defaultArmy = new ArmyViewModel(army);
-                Armies = new ObservableCollection<ArmyViewModel> { defaultArmy };
+                Armies.Add(new ArmyViewModel(army));
             }
         }
 
-        public async void SaveArmiesToFile()
+        public async void SaveArmies()
         {
-            XmlSerializer xs = new XmlSerializer(typeof(List<Army>));
-            
-            StorageFile file = (StorageFile) await ApplicationData.Current.LocalFolder.TryGetItemAsync("settings.xml");
-            if (file == null)
+            var armies = new List<Army>();
+            foreach (ArmyViewModel armyVM in Armies)
             {
-                file = await ApplicationData.Current.LocalFolder.CreateFileAsync("settings.xml");
-            }
+                var army = armyVM.Army;
+                army.ArmyUnits.Clear();
 
-            using (Stream stream = await file.OpenStreamForWriteAsync())
-            {
-                using (TextWriter tw = new StreamWriter(stream))
+                var armyUnits = new List<ArmyUnit>();
+                foreach (ArmyUnitViewModel armyUnitVM in armyVM.ArmyUnits)
                 {
-                    var armies = new List<Army>();
-                    foreach (ArmyViewModel armyVM in Armies)
-                    {
-                        var army = armyVM.Army;
-                        army.HQs.Clear();
+                    ArmyUnit armyUnit = armyUnitVM.ArmyUnit;
 
-                        var armyItems = new List<ArmyItem>();
-                        foreach (ArmyItemViewModel armyItemVM in armyVM.ArmyItems)
-                        {
-                            var armyItem = armyItemVM.ArmyItem;
+                    armyUnit.ArmyId = army.ArmyId;
+                    armyUnit.Options = armyUnitVM.Options.Select(option => option.Option).ToList();
 
-                            armyItem.Options = armyItemVM.Options.Select(option => option.Option).ToList();
-
-                            army.HQs.Add(armyItemVM.ArmyItem);
-                        }
-
-                        armies.Add(army);
-                    }
-                    xs.Serialize(tw, armies);
+                    army.ArmyUnits.Add(armyUnitVM.ArmyUnit);
                 }
             }
+
+            _armyProvider.SaveArmies(armies);
         }
     }
 }
