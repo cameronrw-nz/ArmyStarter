@@ -1,0 +1,52 @@
+@page "/army/{ArmyId}"
+@inject HttpClient Http
+@using ArmyStarter.Blazor.Models;
+
+<h1>Army Unit</h1>
+
+
+@if (armyUnits == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Cost (THB)</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var armyUnit in armyUnits)
+            {
+                <tr>
+                    <td>@armyUnit.Name</td>
+                    <td>@armyUnit.Cost</td>
+                    <td>@armyUnit.PointsValue</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public string ArmyId { get; set; }
+
+    ArmyUnit[] armyUnits;
+
+    protected override async Task OnInitAsync()
+    {
+        string armyUnitUrlString = $"{Constants.ArmyUnitsController}/armyId={ArmyId}";
+        armyUnits = await Http.GetJsonAsync<ArmyUnit[]>(armyUnitUrlString);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        string armyUnitUrlString = $"{Constants.ArmyUnitsController}/armyId={ArmyId}";
+        armyUnits = await Http.GetJsonAsync<ArmyUnit[]>(armyUnitUrlString);
+    }
+}

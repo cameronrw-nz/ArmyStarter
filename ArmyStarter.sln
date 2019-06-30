@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArmyStarter", "ArmyStarter\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArmyStarter.Api", "ArmyStarter.Api\ArmyStarter.Api.csproj", "{5A772E3A-7629-4B67-9A0C-2091B5C224DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArmyStarter.Blazor", "ArmyStarter.Blazor\ArmyStarter.Blazor.csproj", "{FC543451-1DB7-494F-8B13-2719B15EFED7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArmyStarter.Blazor", "ArmyStarter.Blazor\ArmyStarter.Blazor.csproj", "{FC543451-1DB7-494F-8B13-2719B15EFED7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
