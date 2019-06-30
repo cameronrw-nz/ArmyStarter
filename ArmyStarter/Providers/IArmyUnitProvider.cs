@@ -1,11 +1,12 @@
 ﻿using ArmyStarter.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ArmyStarter.Providers
 {
     public interface IArmyUnitProvider
     {
-        IEnumerable<ArmyUnit> GetArmyUnitsForArmy(Guid armyId);
+        Task<IEnumerable<ArmyUnit>> GetArmyUnitsForArmy(Guid armyId);
     }
 }

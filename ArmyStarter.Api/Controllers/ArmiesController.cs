@@ -24,7 +24,7 @@ namespace ArmyStarter.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetArmies()
         {
-            return Ok( _context.Armies);
+            return Ok( _context.Army);
         }
 
         // GET: api/Armies/5
@@ -38,7 +38,7 @@ namespace ArmyStarter.Api.Controllers
 
             var id = new Guid(idString);
 
-            Army selectedArmy = _context.Armies.Include(e => e.ArmyUnits).ThenInclude(e => e.Options).FirstOrDefault(army => army.ArmyId == id);
+            Army selectedArmy = _context.Army.Include(e => e.ArmyUnits).ThenInclude(e => e.Options).FirstOrDefault(army => army.ArmyId == id);
 
             if (selectedArmy == null)
             {
@@ -92,7 +92,7 @@ namespace ArmyStarter.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Armies.Add(army);
+            _context.Army.Add(army);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetArmy", new { id = army.ArmyId }, army);
@@ -107,13 +107,13 @@ namespace ArmyStarter.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var army = await _context.Armies.FindAsync(id);
+            var army = await _context.Army.FindAsync(id);
             if (army == null)
             {
                 return NotFound();
             }
 
-            _context.Armies.Remove(army);
+            _context.Army.Remove(army);
             await _context.SaveChangesAsync();
 
             return Ok(army);
@@ -121,7 +121,7 @@ namespace ArmyStarter.Api.Controllers
 
         private bool ArmyExists(Guid id)
         {
-            return _context.Armies.Any(e => e.ArmyId == id);
+            return _context.Army.Any(e => e.ArmyId == id);
         }
     }
 }

@@ -19,11 +19,11 @@ namespace ArmyStarter.Api.Models
 
         public object GetAllContent()
         {
-            return Armies.Include(e => e.ArmyUnits).ThenInclude(e => e.Options).ToList();
+            return Army.Include(e => e.ArmyUnits).ThenInclude(e => e.Options).ToList();
         }
 
-        public DbSet<Army> Armies { get; set; }
+        public DbSet<Army> Army { get; set; }
 
-        public DbSet<ArmyUnit> ArmyUnits { get; set; }
+        public DbSet<ArmyUnit> ArmyUnit { get; set; }
     }
 }

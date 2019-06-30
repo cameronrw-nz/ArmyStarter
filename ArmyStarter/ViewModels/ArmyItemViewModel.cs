@@ -13,7 +13,14 @@ namespace ArmyStarter.ViewModels
         public ArmyUnitViewModel(ArmyUnit armyItem)
         {
             ArmyUnit = armyItem;
-            Options = new ObservableCollection<OptionViewModel>(armyItem.Options.Select(option => new OptionViewModel(option)));
+            if (armyItem.Options == null)
+            {
+                Options = new ObservableCollection<OptionViewModel>();
+            }
+            else
+            {
+                Options = new ObservableCollection<OptionViewModel>(armyItem.Options.Select(option => new OptionViewModel(option)));
+            }
         }
 
         public ArmyUnit ArmyUnit { get; set; }
@@ -65,7 +72,7 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                return Cost + Options.Sum(option => option.Cost);
+                return ArmyUnit.TotalCost;
             }
         }
 
@@ -83,7 +90,8 @@ namespace ArmyStarter.ViewModels
             }
         }
 
-        public ObservableCollection<OptionViewModel> Options {
+        public ObservableCollection<OptionViewModel> Options
+        {
             get
             {
                 return _options;

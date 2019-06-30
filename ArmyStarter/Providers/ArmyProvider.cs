@@ -8,9 +8,9 @@ namespace ArmyStarter.Providers
 {
     public class ArmyProvider : IArmyProvider
     {
-        public IEnumerable<Army> GetArmies()
+        public async Task<IEnumerable<Army>> GetArmies()
         {
-            var armiesStringResponse = ApiFramework.ApiGetStringResponse(Constants.ArmiesController).Result;
+            string armiesStringResponse = await ApiFramework.ApiGetStringResponse(Constants.ArmiesController);
             IEnumerable<Army> armies = JsonConvert.DeserializeObject<IEnumerable<Army>>(armiesStringResponse);
             return armies;
         }

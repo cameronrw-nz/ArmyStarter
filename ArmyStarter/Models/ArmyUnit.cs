@@ -8,10 +8,9 @@ namespace ArmyStarter.Models
     {
         public ArmyUnit() : base()
         {
-            ArmyUnitId = Guid.NewGuid();
         }
 
-        public Guid ArmyId { get; set; }
+        public Guid? ArmyId { get; set; }
 
         public int PointsValue { get; set; }
 
@@ -19,7 +18,7 @@ namespace ArmyStarter.Models
         {
             get
             {
-                return Cost + Options.Sum(option => option.Cost);
+                return Cost + (Options != null ? Options.Sum(option => option.Cost) : 0);
             }
         }
 
@@ -27,6 +26,6 @@ namespace ArmyStarter.Models
 
         public List<Option> Options { get; set; } = new List<Option>();
 
-        public Guid ArmyUnitId { get; set; }
+        public Guid? ArmyUnitId { get; set; }
     }
 }

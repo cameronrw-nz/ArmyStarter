@@ -86,8 +86,8 @@
             </Grid>
             <ListView Grid.Row="1" 
                       HorizontalAlignment="Stretch" 
-                      ItemsSource="{Binding ArmyItems, Mode=TwoWay}"
-                      SelectedValue="{Binding SelectedArmyItem, Mode=TwoWay}"
+                      ItemsSource="{Binding ArmyUnits, Mode=TwoWay}"
+                      SelectedValue="{Binding SelectedArmyUnit, Mode=TwoWay}"
                       SelectionMode="Single"
                       Margin="10,10,10,0">
                 <ListView.ItemContainerStyle>
@@ -123,7 +123,7 @@
                 <Button Content="Remove Army Item" Grid.Column="2" HorizontalAlignment="Left" Margin="5,10,0,10" Click="OnRemoveArmyItem_Click"/>
             </Grid>
         </Grid>
-        <Grid Grid.Column="2" DataContext="{Binding SelectedArmy.SelectedArmyItem}">
+        <Grid Grid.Column="2" DataContext="{Binding SelectedArmy.SelectedArmyUnit}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

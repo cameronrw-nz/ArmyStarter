@@ -2,17 +2,16 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ArmyStarter.Providers
 {
-    public class ArmyUnitProvider
+    public class ArmyUnitProvider : IArmyUnitProvider
     {
-        public IEnumerable<ArmyUnit> GetArmies()
+        public async Task<IEnumerable<ArmyUnit>> GetArmyUnitsForArmy(Guid armyId)
         {
-            var armiesStringResponse = ApiFramework.ApiGetStringResponse(Constants.ArmyUnitsController).Result;
+            string armyUnitUrlString = $"{Constants.ArmyUnitsController}/armyId={armyId.ToString()}";
+            string armiesStringResponse = await ApiFramework.ApiGetStringResponse(armyUnitUrlString);
             IEnumerable<ArmyUnit> armies = JsonConvert.DeserializeObject<IEnumerable<ArmyUnit>>(armiesStringResponse);
             return armies;
         }

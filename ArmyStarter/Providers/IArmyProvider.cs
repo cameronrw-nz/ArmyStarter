@@ -1,11 +1,12 @@
 ﻿using ArmyStarter.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ArmyStarter.Providers
 {
     public interface IArmyProvider
     {
-        IEnumerable<Army> GetArmies();
+        Task<IEnumerable<Army>> GetArmies();
 
         void SaveArmies(IEnumerable<Army> armies);
     }

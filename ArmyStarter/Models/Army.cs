@@ -7,13 +7,12 @@ namespace ArmyStarter.Models
     {
         public Army()
         {
-            ArmyId = Guid.NewGuid();
         }
 
         public string Name { get; set; }
 
         public List<ArmyUnit> ArmyUnits { get; set; } = new List<ArmyUnit>();
 
-        public Guid ArmyId { get; set; }
+        public Guid? ArmyId { get; set; }
     }
 }

@@ -65,7 +65,7 @@ namespace ArmyStarter
 
         private void LaunchLink_Click(object sender, RoutedEventArgs e)
         {
-            var link = ((MainPageViewModel)DataContext).SelectedArmy?.SelectedArmyItem?.Link;
+            var link = ((MainPageViewModel)DataContext).SelectedArmy?.SelectedArmyUnit?.Link;
             if (!string.IsNullOrEmpty(link))
             {
                 Windows.System.Launcher.LaunchUriAsync(new Uri(link));
@@ -79,12 +79,12 @@ namespace ArmyStarter
 
         private void OnCreateOption_Click(object sender, RoutedEventArgs e)
         {
-            ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyItem.CreateNewOption();
+            ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyUnit.CreateNewOption();
         }
 
         private void OnRemoveOption_Click(object sender, RoutedEventArgs e)
         {
-            ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyItem.RemoveOption();
+            ((MainPageViewModel)DataContext).SelectedArmy.SelectedArmyUnit.RemoveOption();
         }
 
         private void OnArmyLink_Click(object sender, RoutedEventArgs e)

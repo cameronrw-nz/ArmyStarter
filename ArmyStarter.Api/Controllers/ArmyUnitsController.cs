@@ -20,9 +20,17 @@ namespace ArmyStarter.Api.Controllers
 
         // GET: api/armyUnits
         [HttpGet]
-        public async Task<IActionResult> GetArmyUnits()
+        [HttpGet("")]
+        [HttpGet("armyId={armyId}")]
+        public async Task<IActionResult> GetArmyUnits([FromRoute] string armyId = null)
         {
-            return Ok(_context.Armies);
+            if (armyId == null)
+            {
+                return Ok(_context.ArmyUnit);
+            }
+
+            var id = new Guid(armyId);
+            return Ok(_context.ArmyUnit.Where(armyUnit => armyUnit.ArmyId == id));
         }
 
         // GET: api/armyUnits/5
@@ -36,7 +44,7 @@ namespace ArmyStarter.Api.Controllers
 
             var id = new Guid(idString);
 
-            ArmyUnit selectedArmyUnit = _context.ArmyUnits.Include(e => e.Options).FirstOrDefault(armyUnit => armyUnit.ArmyUnitId == id);
+            ArmyUnit selectedArmyUnit = _context.ArmyUnit.Include(e => e.Options).FirstOrDefault(armyUnit => armyUnit.ArmyId == id);
 
             if (selectedArmyUnit == null)
             {
@@ -45,41 +53,5 @@ namespace ArmyStarter.Api.Controllers
 
             return Ok(selectedArmyUnit);
         }
-
-        // PUT: api/armyUnits/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutArmy([FromRoute] Guid id, [FromBody] Army army)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != army.ArmyId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(army).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ArmyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
     }
 }
