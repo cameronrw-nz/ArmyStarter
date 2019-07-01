@@ -22,7 +22,7 @@ else
         <tbody>
             @foreach (var armyUnit in armyUnits)
             {
-                <tr>
+                <tr @onclick="@(e => SelectArmy(armyUnit))">
                     <td>@armyUnit.Name</td>
                     <td>@armyUnit.Cost</td>
                     <td>@armyUnit.PointsValue</td>
@@ -32,11 +32,28 @@ else
     </table>
 }
 
+@if (selectedArmyUnit != null)
+{
+    <div>
+        <div>Name: @selectedArmyUnit.Name</div>
+        <div>Link: <a href="@selectedArmyUnit.Link">@selectedArmyUnit.Link</a></div>
+        <div>Cost: @selectedArmyUnit.Cost</div>
+        <div>Pts:  @selectedArmyUnit.PointsValue</div>
+    </div>
+}
+
 @code {
     [Parameter]
     public string ArmyId { get; set; }
 
     ArmyUnit[] armyUnits;
+
+    ArmyUnit selectedArmyUnit { get; set; }
+
+    void SelectArmy(ArmyUnit armyUnit)
+    {
+        selectedArmyUnit = armyUnit;
+    }
 
     protected override async Task OnInitAsync()
     {
