@@ -26,11 +26,11 @@ namespace ArmyStarter.Api.Controllers
         {
             if (armyId == null)
             {
-                return Ok(_context.ArmyUnit);
+                return Ok(_context.PlanArmyUnit);
             }
 
             var id = new Guid(armyId);
-            return Ok(_context.ArmyUnit.Where(armyUnit => armyUnit.ArmyId == id));
+            return Ok(_context.PlanArmyUnit.Where(armyUnit => armyUnit.PlanArmyId == id));
         }
 
         // GET: api/armyUnits/5
@@ -44,7 +44,7 @@ namespace ArmyStarter.Api.Controllers
 
             var id = new Guid(idString);
 
-            ArmyUnit selectedArmyUnit = _context.ArmyUnit.Include(e => e.Options).FirstOrDefault(armyUnit => armyUnit.ArmyId == id);
+            PlanUnit selectedArmyUnit = _context.PlanArmyUnit.Include(e => e.Options).FirstOrDefault(armyUnit => armyUnit.PlanArmyId == id);
 
             if (selectedArmyUnit == null)
             {

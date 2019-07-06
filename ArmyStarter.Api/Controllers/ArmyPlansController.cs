@@ -1,36 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ArmyStarter.Api.Models;
 
 namespace ArmyStarter.Api.Controllers
 {
-    [Route("api/armies")]
+    [Route("api/armyPlans")]
     [ApiController]
-    public class ArmiesController : ControllerBase
+    public class ArmyPlansController : ControllerBase
     {
         private readonly ArmyStarterContext _context;
 
-        public ArmiesController(ArmyStarterContext context)
+        public ArmyPlansController(ArmyStarterContext context)
         {
             _context = context;
         }
 
-        // GET: api/Armies
+        // GET: api/armyPlans
         [HttpGet]
-        public async Task<IActionResult> GetArmies()
+        public async Task<IActionResult> GetArmyPlans()
         {
-            var army = _context.Army.Include(e => e.AvailableUnits).ThenInclude(e => e.Models);
-            return Ok( _context.GetAllArmyContent());
+            return Ok(_context.PlanArmy);
         }
 
-        // GET: api/Armies/5
+        // GET: api/armyPlans/5
         [HttpGet("{idString}")]
-        public async Task<IActionResult> GetArmy([FromRoute] string idString)
+        public async Task<IActionResult> GetArmyPlan([FromRoute] string idString)
         {
             if (!ModelState.IsValid)
             {

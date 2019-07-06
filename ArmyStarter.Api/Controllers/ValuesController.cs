@@ -16,7 +16,7 @@ namespace ArmyStarter.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetArmy()
         {
-            return Ok(new Army());
+            return Ok(new PlanArmy());
         }
     }
 }
