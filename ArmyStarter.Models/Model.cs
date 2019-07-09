@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ArmyStarter.Models
 {
@@ -31,5 +32,7 @@ namespace ArmyStarter.Models
         public int? InvulnerableSave { get; set; }
 
         public int? FeelNoPainSave { get; set; }
+
+        public virtual IList<ModelWeapon> Weapons { get; set; }
     }
 }

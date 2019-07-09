@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace ArmyStarter.Models
+{
+    public class Weapon
+    {
+        public Guid WeaponId { get; set; }
+
+        public WeaponType WeaponType { get; set; }
+
+        public int Range { get; set; }
+
+        public int Strength { get; set; }
+
+        public int AP { get; set; }
+
+        public int Attacks { get; set; }
+
+        public virtual IList<ModelWeapon> ModelWeapons { get; set; }
+    }
+
+    public enum WeaponType
+    {
+        Melee,
+        Pistol,
+        Assault,
+        RapidFire,
+        Heavy,
+        Macro
+    }
+}
