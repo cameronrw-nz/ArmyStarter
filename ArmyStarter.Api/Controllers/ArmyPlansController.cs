@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArmyStarter.Api.Controllers
 {
-    [Route("api/armyPlans")]
+    [Route(Constants.BaseUrl + Constants.PlanArmyRoute)]
     [ApiController]
     public class ArmyPlansController : ControllerBase
     {

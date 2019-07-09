@@ -8,7 +8,7 @@ using ArmyStarter.Models;
 
 namespace ArmyStarter.Api.Controllers
 {
-    [Route("api/armies")]
+    [Route(Constants.BaseUrl + Constants.ArmiesRoute)]
     [ApiController]
     public class ArmiesController : ControllerBase
     {

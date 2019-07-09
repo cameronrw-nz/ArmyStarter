@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace ArmyStarter.Api.Controllers
 {
-    [Route("api/armyUnits")]
+    [Route(Constants.BaseUrl + Constants.ArmyUnitsController)]
     [ApiController]
-    public class ArmyUnitsController : ControllerBase
+    public class PlanUnitsController : ControllerBase
     {
         private readonly ArmyStarterContext _context;
 
-        public ArmyUnitsController(ArmyStarterContext context)
+        public PlanUnitsController(ArmyStarterContext context)
         {
             _context = context;
         }
@@ -22,8 +22,8 @@ namespace ArmyStarter.Api.Controllers
         // GET: api/armyUnits
         [HttpGet]
         [HttpGet("")]
-        [HttpGet("armyId={armyId}")]
-        public async Task<IActionResult> GetArmyUnits([FromRoute] string armyId = null)
+        [HttpGet("planArmyId={planArmyId}")]
+        public async Task<IActionResult> GetPlanUnits([FromRoute] string armyId = null)
         {
             if (armyId == null)
             {
@@ -36,7 +36,7 @@ namespace ArmyStarter.Api.Controllers
 
         // GET: api/armyUnits/5
         [HttpGet("{idString}")]
-        public async Task<IActionResult> GetArmyUnit([FromRoute] string idString)
+        public async Task<IActionResult> GetPlanUnit([FromRoute] string idString)
         {
             if (!ModelState.IsValid)
             {

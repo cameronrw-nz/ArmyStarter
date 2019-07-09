@@ -10,7 +10,7 @@ namespace ArmyStarter.Providers
     {
         public async Task<IEnumerable<PlanUnit>> GetArmyUnitsForArmy(Guid armyId)
         {
-            string armyUnitUrlString = $"{Constants.ArmyUnitsController}/armyId={armyId.ToString()}";
+            string armyUnitUrlString = $"{Constants.ArmyUnitsController}/planArmyId={armyId.ToString()}";
             string armiesStringResponse = await ApiFramework.ApiGetStringResponse(armyUnitUrlString);
             IEnumerable<PlanUnit> planUnits = JsonConvert.DeserializeObject<IEnumerable<PlanUnit>>(armiesStringResponse);
             return planUnits;

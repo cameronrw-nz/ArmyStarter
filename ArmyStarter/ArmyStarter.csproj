@@ -119,7 +119,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Constants.cs" />
     <Compile Include="Helpers\IsNullOrEmptyConverter.cs" />
     <Compile Include="Helpers\IsNullOrEmptyToVisibilityConverter.cs" />
     <Compile Include="Helpers\StringFormatter.cs" />
