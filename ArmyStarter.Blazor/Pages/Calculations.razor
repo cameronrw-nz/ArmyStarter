@@ -1,16 +1,25 @@
 @using ArmyStarter.Models;
 
-<h3>Calculations</h3>
-
 <div>
-    <div>@AttackingUnit?.Name</div>
-    @foreach (var model in AttackingUnit?.Models ?? new Model[0])
+    <h3>@AttackingUnit?.Name</h3>
+    <select @onchange="@OnSelectChange">
+        <option value="Shooting">Shooting</option>
+        <option value="Melee">Melee</option>
+    </select>
+    @foreach (var model in AttackingUnit.Models)
     {
-        <AttackingModel Model="@model" />
+        <AttackingModel Model="@model" SelectedAttack="@SelectedAttack" />
     }
 </div>
 
 @code {
     [Parameter]
     Unit AttackingUnit { get; set; }
+
+    string SelectedAttack { get; set; } = "Shooting";
+
+    void OnSelectChange(UIChangeEventArgs e)
+    {
+        SelectedAttack = e.Value.ToString();
+    }
 }

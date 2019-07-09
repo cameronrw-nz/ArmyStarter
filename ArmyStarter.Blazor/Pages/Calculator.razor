@@ -25,7 +25,10 @@
         }
     </select>
 
-    <Calculations AttackingUnit="@SelectedUnit" />
+    @if (SelectedUnit != null)
+    {
+        <Calculations AttackingUnit="@SelectedUnit" />
+    }
 </div>
 
 @code {

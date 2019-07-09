@@ -1,20 +1,46 @@
 @using ArmyStarter.Models;
 
 <div>
-    <div>@Model.Name</div>
-    <div>@Model.Movement</div>
-    <div>@Model.WeaponSkill</div>
-    <div>@Model.BallisticSkill</div>
-    <div>@Model.Strength</div>
-    <div>@Model.Toughness</div>
-    <div>@Model.Wounds</div>
-    <div>@Model.Attacks</div>
-    <div>@Model.LeaderShip</div>
-    <div>@Model.ArmourSave</div>
-    <div>@Model.InvulnerableSave</div>
+    <h4>@Model.Name</h4>
+    @if (SelectedAttack == "Shooting")
+    {
+        <table>
+            <tr>
+                <td>Number of Models</td>
+                <td>WS</td>
+                <td>S</td>
+                <td>A</td>
+            </tr>
+            <tr>
+                <td><input type="number" value="@NumberOfModels" /></td>
+                <td>@Model.WeaponSkill</td>
+                <td>@Model.Strength</td>
+                <td>@Model.Attacks</td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        <table>
+            <tr>
+                <td>Number of Models</td>
+                <td>BS</td>
+            </tr>
+            <tr>
+                <td><input type="number" value="@NumberOfModels" /></td>
+                <td>@Model.BallisticSkill</td>
+            </tr>
+        </table>
+    }
 </div>
 
 @code {
     [Parameter]
     Model Model { get; set; }
+
+    [Parameter]
+    string SelectedAttack { get; set; }
+
+    int NumberOfModels { get; set; } = 1;
+
 }
