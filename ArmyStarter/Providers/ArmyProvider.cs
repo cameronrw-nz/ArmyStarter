@@ -6,24 +6,24 @@ using Newtonsoft.Json;
 
 namespace ArmyStarter.Providers
 {
-    public class ArmyProvider : IArmyProvider
+    public class PlanArmyProvider : IPlanArmyProvider
     {
-        public async Task<IEnumerable<Army>> GetArmies()
+        public async Task<IEnumerable<PlanArmy>> GetArmies()
         {
             string armiesStringResponse = await ApiFramework.ApiGetStringResponse(Constants.ArmiesController);
-            IEnumerable<Army> armies = JsonConvert.DeserializeObject<IEnumerable<Army>>(armiesStringResponse);
+            IEnumerable<PlanArmy> armies = JsonConvert.DeserializeObject<IEnumerable<PlanArmy>>(armiesStringResponse);
             return armies;
         }
 
-        public void SaveArmies(IEnumerable<Army> armies)
+        public void SaveArmies(IEnumerable<PlanArmy> armies)
         {
-            foreach (Army army in armies)
+            foreach (PlanArmy army in armies)
             {
                 SaveArmy(army);
             }
         }
 
-        private async void SaveArmy(Army army)
+        private async void SaveArmy(PlanArmy army)
         {
             // Construct the HttpClient and Uri. This endpoint is for test purposes only.
             Windows.Web.Http.HttpClient httpClient = new Windows.Web.Http.HttpClient();

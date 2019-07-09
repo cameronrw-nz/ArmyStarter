@@ -5,36 +5,36 @@ using System.Linq;
 
 namespace ArmyStarter.ViewModels
 {
-    public class ArmyUnitViewModel : ViewModelBase
+    public class PlanUnitViewModel : ViewModelBase
     {
         private OptionViewModel _selectedOption;
         private ObservableCollection<OptionViewModel> _options;
 
-        public ArmyUnitViewModel(ArmyUnit armyItem)
+        public PlanUnitViewModel(PlanUnit planUnit)
         {
-            ArmyUnit = armyItem;
-            if (armyItem.Options == null)
+            PlanUnit = planUnit;
+            if (planUnit.Options == null)
             {
                 Options = new ObservableCollection<OptionViewModel>();
             }
             else
             {
-                Options = new ObservableCollection<OptionViewModel>(armyItem.Options.Select(option => new OptionViewModel(option)));
+                Options = new ObservableCollection<OptionViewModel>(planUnit.Options.Select(option => new OptionViewModel(option)));
             }
         }
 
-        public ArmyUnit ArmyUnit { get; set; }
+        public PlanUnit PlanUnit { get; set; }
 
         public string Name
         {
             get
             {
-                return ArmyUnit.Name;
+                return PlanUnit.Unit?.Name;
             }
 
             set
             {
-                ArmyUnit.Name = value;
+                PlanUnit.Unit.Name = value;
                 OnPropertyChanged();
             }
         }
@@ -43,26 +43,25 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                return ArmyUnit.PointsValue;
+                return 0;
             }
 
             set
             {
-                ArmyUnit.PointsValue = value;
                 OnPropertyChanged();
             }
         }
 
-        public int Cost
+        public int? Cost
         {
             get
             {
-                return ArmyUnit.Cost;
+                return PlanUnit.Unit?.Cost;
             }
 
             set
             {
-                ArmyUnit.Cost = value;
+                PlanUnit.Unit.Cost = value ?? 0;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(TotalCost));
             }
@@ -72,7 +71,7 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                return ArmyUnit.TotalCost;
+                return 0;
             }
         }
 
@@ -80,12 +79,12 @@ namespace ArmyStarter.ViewModels
         {
             get
             {
-                return ArmyUnit.Link;
+                return PlanUnit.Unit?.Link;
             }
 
             set
             {
-                ArmyUnit.Link = value;
+                PlanUnit.Unit.Link = value;
                 OnPropertyChanged();
             }
         }
@@ -120,7 +119,7 @@ namespace ArmyStarter.ViewModels
 
         public void CreateNewOption()
         {
-            var newOption = new OptionViewModel(new Option());
+            var newOption = new OptionViewModel(new PlanOption());
             newOption.PropertyChanged += SelectedOption_PropertyChanged;
 
             Options.Add(newOption);

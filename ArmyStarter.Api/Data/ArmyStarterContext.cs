@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using ArmyStarter.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ArmyStarter.Api.Models
+namespace ArmyStarter.Api.Data
 {
     public class ArmyStarterContext : DbContext
     {

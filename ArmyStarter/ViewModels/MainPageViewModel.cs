@@ -9,25 +9,25 @@ namespace ArmyStarter.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
-        private readonly IArmyProvider _armyProvider;
+        private readonly IPlanArmyProvider _armyProvider;
         private readonly IArmyUnitProvider _armyUnitProvider;
-        private ObservableCollection<ArmyViewModel> _armies;
-        private ArmyViewModel _selectedArmy;
+        private ObservableCollection<PlanArmyViewModel> _armies;
+        private PlanArmyViewModel _selectedArmy;
 
-        public MainPageViewModel() : this(new ArmyProvider())
+        public MainPageViewModel() : this(new PlanArmyProvider())
         {
 
         }
 
-        public MainPageViewModel(IArmyProvider armyProvider)
+        public MainPageViewModel(IPlanArmyProvider armyProvider)
         {
             _armyProvider = armyProvider;
 
-            Armies = new ObservableCollection<ArmyViewModel>();
+            Armies = new ObservableCollection<PlanArmyViewModel>();
             InitiliseMainPage();
         }
 
-        public ObservableCollection<ArmyViewModel> Armies
+        public ObservableCollection<PlanArmyViewModel> Armies
         {
             get
             {
@@ -41,7 +41,7 @@ namespace ArmyStarter.ViewModels
             }
         }
 
-        public ArmyViewModel SelectedArmy
+        public PlanArmyViewModel SelectedArmy
         {
             get
             {
@@ -51,7 +51,7 @@ namespace ArmyStarter.ViewModels
             set
             {
                 _selectedArmy = value;
-                if (_selectedArmy != null && _selectedArmy.Army.ArmyId != null && _selectedArmy.ArmyUnits.Count == 0)
+                if (_selectedArmy != null && _selectedArmy.PlanArmy.PlanArmyId != null && _selectedArmy.PlanUnits.Count == 0)
                 {
                     _selectedArmy.PopulateArmyUnits();
                 }
@@ -62,7 +62,7 @@ namespace ArmyStarter.ViewModels
 
         public void CreateNewArmy()
         {
-            var newArmy = new ArmyViewModel() { Army = new Army() };
+            var newArmy = new PlanArmyViewModel() { PlanArmy = new PlanArmy() };
 
             Armies.Add(newArmy);
 
@@ -79,20 +79,20 @@ namespace ArmyStarter.ViewModels
 
         internal void CopyArmy()
         {
-            Army army = SelectedArmy.Army;
-            army.ArmyUnits.Clear();
+            PlanArmy army = SelectedArmy.PlanArmy;
+            army.PlanUnits.Clear();
 
-            var armyItems = new List<ArmyUnit>();
-            foreach (ArmyUnitViewModel armyItemVM in SelectedArmy.ArmyUnits)
+            var armyItems = new List<PlanUnit>();
+            foreach (PlanUnitViewModel armyItemVM in SelectedArmy.PlanUnits)
             {
-                ArmyUnit armyItem = armyItemVM.ArmyUnit;
+                PlanUnit armyItem = armyItemVM.PlanUnit;
 
                 armyItem.Options = armyItemVM.Options.Select(option => option.Option).ToList();
 
-                army.ArmyUnits.Add(armyItemVM.ArmyUnit);
+                army.PlanUnits.Add(armyItemVM.PlanUnit);
             }
 
-            var copiedArmy = new ArmyViewModel() { Army = StaticHelper.DeepClone(army) };
+            var copiedArmy = new PlanArmyViewModel() { PlanArmy = StaticHelper.DeepClone(army) };
 
             Armies.Add(copiedArmy);
 
@@ -107,39 +107,39 @@ namespace ArmyStarter.ViewModels
 
         private async void InitiliseMainPage()
         {
-            IEnumerable<Army> armies = await _armyProvider.GetArmies();
+            IEnumerable<PlanArmy> armies = await _armyProvider.GetArmies();
 
-            foreach (Army army in armies)
+            foreach (PlanArmy army in armies)
             {
-                Armies.Add(new ArmyViewModel { Army = army });
+                Armies.Add(new PlanArmyViewModel { PlanArmy = army });
             }
         }
 
         public async void SaveArmies()
         {
-            var armies = new List<Army>();
-            foreach (ArmyViewModel armyVM in Armies)
+            var armies = new List<PlanArmy>();
+            foreach (PlanArmyViewModel armyVM in Armies)
             {
-                Army army = armyVM.Army;
-                if (army.ArmyId == null)
+                PlanArmy army = armyVM.PlanArmy;
+                if (army.PlanArmyId == null)
                 {
-                    army.ArmyId = Guid.NewGuid();
+                    army.PlanArmyId = Guid.NewGuid();
                 }
-                army.ArmyUnits.Clear();
+                army.PlanUnits.Clear();
 
-                var armyUnits = new List<ArmyUnit>();
-                foreach (ArmyUnitViewModel armyUnitVM in armyVM.ArmyUnits)
+                var armyUnits = new List<PlanUnit>();
+                foreach (PlanUnitViewModel armyUnitVM in armyVM.PlanUnits)
                 {
-                    ArmyUnit armyUnit = armyUnitVM.ArmyUnit;
-                    if (armyUnit.ArmyUnitId == null)
+                    PlanUnit armyUnit = armyUnitVM.PlanUnit;
+                    if (armyUnit.PlanUnitId == null)
                     {
-                        armyUnit.ArmyUnitId = Guid.NewGuid();
+                        armyUnit.PlanUnitId = Guid.NewGuid();
                     }
 
-                    armyUnit.ArmyId = army.ArmyId;
+                    armyUnit.PlanArmyId = army.PlanArmyId;
                     armyUnit.Options = armyUnitVM.Options.Select(option => option.Option).ToList();
 
-                    army.ArmyUnits.Add(armyUnitVM.ArmyUnit);
+                    army.PlanUnits.Add(armyUnitVM.PlanUnit);
                 }
             }
 

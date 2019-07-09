@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArmyStarter.Api.Models;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using ArmyStarter.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArmyStarter.Api.Controllers

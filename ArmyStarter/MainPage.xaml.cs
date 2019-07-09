@@ -89,7 +89,7 @@ namespace ArmyStarter
 
         private void OnArmyLink_Click(object sender, RoutedEventArgs e)
         {
-            var link = ((ArmyUnitViewModel)((Button)sender).DataContext)?.Link;
+            var link = ((PlanUnitViewModel)((Button)sender).DataContext)?.Link;
             if (!string.IsNullOrEmpty(link))
             {
                 Windows.System.Launcher.LaunchUriAsync(new Uri(link));

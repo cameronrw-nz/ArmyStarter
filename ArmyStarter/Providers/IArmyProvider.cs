@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace ArmyStarter.Providers
 {
-    public interface IArmyProvider
+    public interface IPlanArmyProvider
     {
-        Task<IEnumerable<Army>> GetArmies();
+        Task<IEnumerable<PlanArmy>> GetArmies();
 
-        void SaveArmies(IEnumerable<Army> armies);
+        void SaveArmies(IEnumerable<PlanArmy> armies);
     }
 }

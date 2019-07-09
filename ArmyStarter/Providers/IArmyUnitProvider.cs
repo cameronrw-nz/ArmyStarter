@@ -7,6 +7,6 @@ namespace ArmyStarter.Providers
 {
     public interface IArmyUnitProvider
     {
-        Task<IEnumerable<ArmyUnit>> GetArmyUnitsForArmy(Guid armyId);
+        Task<IEnumerable<PlanUnit>> GetArmyUnitsForArmy(Guid armyId);
     }
 }

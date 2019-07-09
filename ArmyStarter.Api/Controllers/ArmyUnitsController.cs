@@ -1,4 +1,5 @@
-﻿using ArmyStarter.Api.Models;
+﻿using ArmyStarter.Api.Data;
+using ArmyStarter.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;

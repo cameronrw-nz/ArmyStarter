@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ArmyStarter.Api.Data;
+using ArmyStarter.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ArmyStarter.Api.Models;
 
 namespace ArmyStarter.Api.Controllers
 {

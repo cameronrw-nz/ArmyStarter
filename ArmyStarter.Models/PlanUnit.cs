@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ArmyStarter.Api.Models
+namespace ArmyStarter.Models
 {
     public class PlanUnit
     {

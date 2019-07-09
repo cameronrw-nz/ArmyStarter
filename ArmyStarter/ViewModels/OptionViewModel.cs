@@ -4,12 +4,12 @@ namespace ArmyStarter.ViewModels
 {
     public class OptionViewModel : ViewModelBase
     {
-        public OptionViewModel(Option option)
+        public OptionViewModel(PlanOption option)
         {
             Option = option;
         }
 
-        public Option Option { get; set; }
+        public PlanOption Option { get; set; }
 
         public string Name
         {
