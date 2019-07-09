@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ArmyStarter.Api.Controllers
 {
-    [Route(Constants.BaseUrl + Constants.ArmyUnitsController)]
+    [Route(Constants.BaseUrl + Constants.PlanUnitsRoute)]
     [ApiController]
     public class PlanUnitsController : ControllerBase
     {

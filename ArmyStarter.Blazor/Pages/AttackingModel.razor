@@ -1,0 +1,20 @@
+@using ArmyStarter.Models;
+
+<div>
+    <div>@Model.Name</div>
+    <div>@Model.Movement</div>
+    <div>@Model.WeaponSkill</div>
+    <div>@Model.BallisticSkill</div>
+    <div>@Model.Strength</div>
+    <div>@Model.Toughness</div>
+    <div>@Model.Wounds</div>
+    <div>@Model.Attacks</div>
+    <div>@Model.LeaderShip</div>
+    <div>@Model.ArmourSave</div>
+    <div>@Model.InvulnerableSave</div>
+</div>
+
+@code {
+    [Parameter]
+    Model Model { get; set; }
+}

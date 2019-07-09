@@ -1,10 +1,57 @@
 @page "/calculator"
+@inject HttpClient Http
+@using ArmyStarter.Models;
 
-<h3>Calculator</h3>
+<h2>Calculator</h2>
 
 <div>
+    <select @onchange="@SelectArmy">
+        <option value="">Please Choose An Option...</option>
+        @foreach (var army in Armies)
+        {
+            <option value="@army.ArmyId">
+                @army.Name
+            </option>
+        }
+    </select>
+
+    <select @onchange="@SelectUnit">
+        <option value="">Please Choose An Option...</option>
+        @foreach (var unit in SelectedArmy?.AvailableUnits ?? new Unit[0])
+        {
+            <option value="@unit.UnitId">
+                @unit.Name
+            </option>
+        }
+    </select>
+
+    <Calculations AttackingUnit="@SelectedUnit" />
 </div>
 
 @code {
+    ArmyStarter.Models.Army[] Armies { get; set; } = new ArmyStarter.Models.Army[0];
+    Unit[] Units { get; set; }
 
+    ArmyStarter.Models.Army SelectedArmy { get; set; }
+
+    Unit SelectedUnit { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        Armies = await Http.GetJsonAsync<ArmyStarter.Models.Army[]>(Constants.ArmiesController);
+        Console.WriteLine(Armies[0].Name);
+    }
+
+    void SelectArmy(UIChangeEventArgs e)
+    {
+        var selectedArmyId = new Guid(e.Value.ToString());
+        SelectedArmy = Armies.FirstOrDefault(army => army.ArmyId == selectedArmyId);
+    }
+
+
+    void SelectUnit(UIChangeEventArgs e)
+    {
+        var selectedUnitId = new Guid(e.Value.ToString());
+        SelectedUnit = SelectedArmy.AvailableUnits.FirstOrDefault(army => army.UnitId == selectedUnitId);
+    }
 }

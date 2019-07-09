@@ -1,0 +1,16 @@
+@using ArmyStarter.Models;
+
+<h3>Calculations</h3>
+
+<div>
+    <div>@AttackingUnit?.Name</div>
+    @foreach (var model in AttackingUnit?.Models ?? new Model[0])
+    {
+        <AttackingModel Model="@model" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    Unit AttackingUnit { get; set; }
+}
