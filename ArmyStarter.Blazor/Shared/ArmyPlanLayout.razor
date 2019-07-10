@@ -1,0 +1,42 @@
+@using ArmyStarter.Models;
+
+<div class="d-flex">
+    <h1>
+        @Header
+    </h1>
+    <span class="oi oi-pencil align-bottom"  @onclick="@Toggle" />
+</div>
+
+@if (PlanArmy.Description != null)
+{
+    <p>@PlanArmy.Description</p>
+}
+
+@if (IsEditingPlanArmyInfo)
+{
+    <ArmyPlanEditingSection @bind-PlanArmy="@PlanArmy" />
+}
+
+@code {
+    [Parameter]
+    PlanArmy PlanArmy { get; set; }
+
+    [Parameter]
+    PlanUnit[] armyUnits { get; set; }
+
+    PlanUnit selectedArmyUnit { get; set; }
+
+    bool IsEditingPlanArmyInfo { get; set; } = true;
+
+    string Header => PlanArmy.Name ?? "Create Army Plan";
+
+    void SelectArmy(PlanUnit armyUnit)
+    {
+        selectedArmyUnit = armyUnit;
+    }
+
+    void Toggle()
+    {
+        IsEditingPlanArmyInfo = !IsEditingPlanArmyInfo;
+    }
+}

@@ -1,0 +1,21 @@
+@page "/createArmy"
+@inject HttpClient Http
+@using ArmyStarter.Models;
+
+<ArmyPlanLayout PlanArmy="@NewArmyPlan" />
+
+@code {
+    private PlanArmy _newArmyPlan;
+    public PlanArmy NewArmyPlan
+    {
+        get
+        {
+            if (_newArmyPlan == null)
+            {
+                _newArmyPlan = new PlanArmy();
+            }
+
+            return _newArmyPlan;
+        }
+    }
+}

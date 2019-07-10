@@ -1,0 +1,28 @@
+@page "/army/{ArmyId}"
+@inject HttpClient Http
+@using ArmyStarter.Models;
+
+<ArmyPlanLayout PlanArmy="@PlanArmy" />
+
+@code {
+    [Parameter]
+    public string ArmyId { get; set; }
+
+    PlanArmy PlanArmy { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        GetArmyPlan();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        GetArmyPlan();
+    }
+
+    private async void GetArmyPlan()
+    {
+        string armyPlanUrlString = $"{Constants.PlanArmiesController}/armyId={ArmyId}";
+        PlanArmy = await Http.GetJsonAsync<PlanArmy>(armyPlanUrlString);
+    }
+}
