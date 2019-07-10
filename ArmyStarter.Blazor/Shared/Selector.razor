@@ -1,0 +1,20 @@
+
+<select class="custom-select" @bind="@Value" @onclick="@UpdateValue">
+    @ChildContent
+</select>
+
+@code {
+    [Parameter]
+    string Value { get; set; }
+
+    [Parameter]
+    private RenderFragment ChildContent { get; set; }
+
+    [Parameter] private EventCallback<string> ValueChanged { get; set; }
+
+    private async Task UpdateValue()
+    {
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+}

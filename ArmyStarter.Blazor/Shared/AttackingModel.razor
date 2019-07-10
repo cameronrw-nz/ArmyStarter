@@ -1,0 +1,35 @@
+@using ArmyStarter.Blazor.Display;
+
+@if (SelectedAttack == "Shooting")
+{
+    <tr>
+        <td><dt>@ModelDisplay.Model.Name</dt></td>
+        <td><input type="number" @bind="@ModelDisplay.NumberOfModels" /></td>
+        <td>@ModelDisplay.Model.WeaponSkill</td>
+        <td>@ModelDisplay.Model.Strength</td>
+        <td>@ModelDisplay.Model.Attacks</td>
+        <td>@ModelDisplay.TotalAttacks</td>
+    </tr>
+}
+else
+{
+    <tr>
+        <td><dt>@ModelDisplay.Model.Name</dt></td>
+        <td><input type="number" @bind="@ModelDisplay.NumberOfModels" /></td>
+        <td>@ModelDisplay.Model.BallisticSkill</td>
+    </tr>
+}
+
+@code {
+    [Parameter]
+    ModelDisplay ModelDisplay { get; set; }
+
+    [Parameter]
+    string SelectedAttack { get; set; }
+
+    void OnNumberOfModelsChanged(UIChangeEventArgs e)
+    {
+        ModelDisplay.NumberOfModels = int.Parse(e.Value.ToString());
+        Console.WriteLine(ModelDisplay.NumberOfModels);
+    }
+}

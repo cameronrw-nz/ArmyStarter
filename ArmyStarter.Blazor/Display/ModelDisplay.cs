@@ -31,8 +31,9 @@ namespace ArmyStarter.Blazor.Display
             {
                 numberOfModels = value;
                 Console.WriteLine("Set number");
-
             }
         }
+
+        public int TotalAttacks => NumberOfModels * Model.Attacks;
     }
 }

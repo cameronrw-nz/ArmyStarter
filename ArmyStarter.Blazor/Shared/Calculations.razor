@@ -1,0 +1,57 @@
+@using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Display;
+
+<div>
+    <h2>@AttackingUnit?.Name</h2>
+    <Selector @bind-value="@SelectedAttack">
+        <option value="Shooting">Shooting</option>
+        <option value="Melee">Melee</option>
+    </Selector>
+    <table class="table">
+        @if (SelectedAttack == "Shooting")
+        {
+            <tr>
+                <td>Name</td>
+                <td>No.</td>
+                <td>WS</td>
+                <td>S</td>
+                <td>A</td>
+                <td>Total Attacks</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td>Name</td>
+                <td>Number of Models</td>
+                <td>BS</td>
+            </tr>
+        }
+        @foreach (var model in ModelDisplays)
+        {
+            <AttackingModel ModelDisplay="@model" SelectedAttack="@SelectedAttack" />
+        }
+    </table>
+</div>
+
+@code {
+    private Unit _attackingUnit;
+
+    [Parameter]
+    Unit AttackingUnit
+    {
+        get
+        {
+            return _attackingUnit;
+        }
+        set
+        {
+            _attackingUnit = value;
+        }
+    }
+
+    string SelectedAttack { get; set; } = "Shooting";
+
+    [Parameter]
+    ModelDisplay[] ModelDisplays { get; set; }
+}

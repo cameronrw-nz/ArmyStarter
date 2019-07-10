@@ -3,28 +3,36 @@
 @using ArmyStarter.Models;
 @using ArmyStarter.Blazor.Display;
 
-<h2>Calculator</h2>
+<h1>Calculator</h1>
 
 <div>
-    <select @onchange="@SelectArmy">
-        <option value="">Please Choose An Option...</option>
-        @foreach (var army in Armies)
-        {
-            <option value="@army.ArmyId">
-                @army.Name
-            </option>
-        }
-    </select>
+    <form>
+        <div class="form-group">
+            <dt>Army:</dt>
+            <Selector @bind-value="@SelectedArmyId">
+                <option value="">Please Choose An Option...</option>
+                @foreach (var army in Armies)
+                {
+                    <option value="@army.ArmyId">
+                        @army.Name
+                    </option>
+                }
+            </Selector>
+        </div>
+        <div class="form-group">
+            <dt>Unit:</dt>
+            <Selector @bind-value="@SelectedUnitId">
+                <option value="">Please Choose An Option...</option>
+                @foreach (var unit in SelectedArmy?.AvailableUnits ?? new Unit[0])
+                {
+                    <option value="@unit.UnitId">
+                        @unit.Name
+                    </option>
+                }
+            </Selector>
+        </div>
 
-    <select @onchange="@SelectUnit">
-        <option value="">Please Choose An Option...</option>
-        @foreach (var unit in SelectedArmy?.AvailableUnits ?? new Unit[0])
-        {
-            <option value="@unit.UnitId">
-                @unit.Name
-            </option>
-        }
-    </select>
+    </form>
 
     @if (SelectedUnit != null)
     {
@@ -46,20 +54,31 @@
         Console.WriteLine(Armies[0].Name);
     }
 
-    void SelectArmy(UIChangeEventArgs e)
+    private string _selectedArmyId;
+    string SelectedArmyId
     {
-        var selectedArmyId = new Guid(e.Value.ToString());
-        SelectedArmy = Armies.FirstOrDefault(army => army.ArmyId == selectedArmyId);
+        get => _selectedArmyId;
+        set
+        {
+            _selectedArmyId = value;
+            var selectedArmyIdGuid = new Guid(value);
+            SelectedArmy = Armies.FirstOrDefault(army => army.ArmyId == selectedArmyIdGuid);
+            Console.WriteLine(_selectedArmyId);
+        }
     }
 
-
-    void SelectUnit(UIChangeEventArgs e)
+    private string _selectedUnitId;
+    string SelectedUnitId
     {
-        var selectedUnitId = new Guid(e.Value.ToString());
-        SelectedUnit = SelectedArmy.AvailableUnits.FirstOrDefault(army => army.UnitId == selectedUnitId);
-        ModelDisplays = SelectedUnit.Models.Select(model => new ModelDisplay(model)).ToArray();
+        get => _selectedUnitId;
+        set
+        {
+            _selectedUnitId = value;
+            var selectedUnitIdGuid = new Guid(value);
+            SelectedUnit = SelectedArmy.AvailableUnits.FirstOrDefault(army => army.UnitId == selectedUnitIdGuid);
+            ModelDisplays = SelectedUnit.Models.Select(model => new ModelDisplay(model)).ToArray();
+        }
     }
-
 
     ModelDisplay[] ModelDisplays { get; set; }
 }
