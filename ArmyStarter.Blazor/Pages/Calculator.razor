@@ -1,6 +1,7 @@
 @page "/calculator"
 @inject HttpClient Http
 @using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Display;
 
 <h2>Calculator</h2>
 
@@ -27,7 +28,7 @@
 
     @if (SelectedUnit != null)
     {
-        <Calculations AttackingUnit="@SelectedUnit" />
+        <Calculations AttackingUnit="@SelectedUnit" ModelDisplays="@ModelDisplays" />
     }
 </div>
 
@@ -56,5 +57,9 @@
     {
         var selectedUnitId = new Guid(e.Value.ToString());
         SelectedUnit = SelectedArmy.AvailableUnits.FirstOrDefault(army => army.UnitId == selectedUnitId);
+        ModelDisplays = SelectedUnit.Models.Select(model => new ModelDisplay(model)).ToArray();
     }
+
+
+    ModelDisplay[] ModelDisplays { get; set; }
 }

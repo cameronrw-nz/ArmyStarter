@@ -1,25 +1,36 @@
 @using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Display;
 
 <div>
     <h3>@AttackingUnit?.Name</h3>
-    <select @onchange="@OnSelectChange">
+    <select class="custom-select" @bind="@SelectedAttack">
         <option value="Shooting">Shooting</option>
         <option value="Melee">Melee</option>
     </select>
-    @foreach (var model in AttackingUnit.Models)
+    @foreach (var model in ModelDisplays)
     {
-        <AttackingModel Model="@model" SelectedAttack="@SelectedAttack" />
+        <AttackingModel ModelDisplay="@model" SelectedAttack="@SelectedAttack" />
     }
 </div>
 
 @code {
+    private Unit _attackingUnit;
+
     [Parameter]
-    Unit AttackingUnit { get; set; }
+    Unit AttackingUnit
+    {
+        get
+        {
+            return _attackingUnit;
+        }
+        set
+        {
+            _attackingUnit = value;
+        }
+    }
 
     string SelectedAttack { get; set; } = "Shooting";
 
-    void OnSelectChange(UIChangeEventArgs e)
-    {
-        SelectedAttack = e.Value.ToString();
-    }
+    [Parameter]
+    ModelDisplay[] ModelDisplays { get; set; }
 }

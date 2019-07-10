@@ -1,7 +1,7 @@
-@using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Display;
 
 <div>
-    <h4>@Model.Name</h4>
+    <h4>@ModelDisplay.Model.Name</h4>
     @if (SelectedAttack == "Shooting")
     {
         <table>
@@ -12,10 +12,10 @@
                 <td>A</td>
             </tr>
             <tr>
-                <td><input type="number" value="@NumberOfModels" /></td>
-                <td>@Model.WeaponSkill</td>
-                <td>@Model.Strength</td>
-                <td>@Model.Attacks</td>
+                <td><input type="number" @bind="@ModelDisplay.NumberOfModels" /></td>
+                <td>@ModelDisplay.Model.WeaponSkill</td>
+                <td>@ModelDisplay.Model.Strength</td>
+                <td>@ModelDisplay.Model.Attacks</td>
             </tr>
         </table>
     }
@@ -27,8 +27,8 @@
                 <td>BS</td>
             </tr>
             <tr>
-                <td><input type="number" value="@NumberOfModels" /></td>
-                <td>@Model.BallisticSkill</td>
+                <td><input type="number"  @bind="@ModelDisplay.NumberOfModels" /></td>
+                <td>@ModelDisplay.Model.BallisticSkill</td>
             </tr>
         </table>
     }
@@ -36,11 +36,15 @@
 
 @code {
     [Parameter]
-    Model Model { get; set; }
+    ModelDisplay ModelDisplay { get; set; }
 
     [Parameter]
     string SelectedAttack { get; set; }
 
-    int NumberOfModels { get; set; } = 1;
+    void OnNumberOfModelsChanged(UIChangeEventArgs e)
+    {
+        ModelDisplay.NumberOfModels =  int.Parse(e.Value.ToString());
+    Console.WriteLine(ModelDisplay.NumberOfModels);
+    }
 
 }
