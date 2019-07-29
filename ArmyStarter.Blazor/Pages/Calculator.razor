@@ -6,33 +6,7 @@
 <h1>Calculator</h1>
 
 <div>
-    <form>
-        <div class="form-group">
-            <dt>Army:</dt>
-            <Selector @bind-value="@SelectedArmyId">
-                <option value="">Please Choose An Option...</option>
-                @foreach (var army in Armies)
-                {
-                    <option value="@army.ArmyId">
-                        @army.Name
-                    </option>
-                }
-            </Selector>
-        </div>
-        <div class="form-group">
-            <dt>Unit:</dt>
-            <Selector @bind-value="@SelectedUnitId">
-                <option value="">Please Choose An Option...</option>
-                @foreach (var unit in SelectedArmy?.AvailableUnits ?? new Unit[0])
-                {
-                    <option value="@unit.UnitId">
-                        @unit.Name
-                    </option>
-                }
-            </Selector>
-        </div>
-
-    </form>
+    <ArmyUnitSelector UnitChanged="@SelectUnit" />
 
     @if (SelectedUnit != null)
     {
@@ -67,17 +41,10 @@
         }
     }
 
-    private string _selectedUnitId;
-    string SelectedUnitId
+    void SelectUnit(Unit unit)
     {
-        get => _selectedUnitId;
-        set
-        {
-            _selectedUnitId = value;
-            var selectedUnitIdGuid = new Guid(value);
-            SelectedUnit = SelectedArmy.AvailableUnits.FirstOrDefault(army => army.UnitId == selectedUnitIdGuid);
-            ModelDisplays = SelectedUnit.Models.Select(model => new ModelDisplay(model)).ToArray();
-        }
+        SelectedUnit = unit;
+        ModelDisplays = SelectedUnit.Models.Select(model => new ModelDisplay(model)).ToArray();
     }
 
     ModelDisplay[] ModelDisplays { get; set; }

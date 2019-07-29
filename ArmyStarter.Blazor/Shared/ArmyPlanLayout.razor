@@ -4,7 +4,7 @@
     <h1>
         @Header
     </h1>
-    <span class="oi oi-pencil align-bottom"  @onclick="@Toggle" />
+    <span class="oi oi-pencil align-bottom" @onclick="@Toggle" />
 </div>
 
 @if (PlanArmy.Description != null)
@@ -16,6 +16,10 @@
 {
     <ArmyPlanEditingSection @bind-PlanArmy="@PlanArmy" />
 }
+
+<ArmyPlanUnitsDisplay @bind-PlanArmy="@PlanArmy" />
+
+<ArmyPlanAddUnit @bind-PlanArmy="@PlanArmy" />
 
 @code {
     [Parameter]

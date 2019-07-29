@@ -21,6 +21,16 @@ namespace ArmyStarter.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<ArmyStarterContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ArmyStarterContext")));
+            services.AddMvc()
+             .AddJsonOptions(
+                   options => options.SerializerSettings.ReferenceLoopHandling
+                       = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -31,15 +41,6 @@ namespace ArmyStarter.Api
             {
                 options.AutomaticAuthentication = false;
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddDbContext<ArmyStarterContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ArmyStarterContext")));
-            services.AddMvc()
-             .AddJsonOptions(
-                   options => options.SerializerSettings.ReferenceLoopHandling
-                       = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-        
 
             services.Configure<MvcOptions>(options =>
             {

@@ -23,7 +23,6 @@ namespace ArmyStarter.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetArmies()
         {
-            var army = _context.Army.Include(e => e.AvailableUnits).ThenInclude(e => e.Models);
             return Ok( _context.GetAllArmyContent());
         }
 

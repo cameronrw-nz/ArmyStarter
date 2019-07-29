@@ -23,7 +23,9 @@ namespace ArmyStarter.Api.Data
 
         public object GetAllArmyContent()
         {
-            return Army.Include(e => e.AvailableUnits).ThenInclude(e => e.Models).ToList();
+            return Army
+                .Include(e => e.AvailableUnits).ThenInclude(e => e.Models)
+                .Include(e => e.AvailableUnits).ThenInclude(e => e.RosterPosition).ToList();
         }
 
         public DbSet<PlanArmy> PlanArmy { get; set; }

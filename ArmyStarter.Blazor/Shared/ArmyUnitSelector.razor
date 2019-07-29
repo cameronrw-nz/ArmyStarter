@@ -1,0 +1,84 @@
+@using ArmyStarter.Models;
+@inject HttpClient Http
+
+<form>
+    <div class="form-group">
+        <dt>Army:</dt>
+        <Selector @bind-value="@SelectedArmyId">
+            <option value="">Please Choose An Option...</option>
+            @foreach (var army in Armies)
+            {
+                <option value="@army.ArmyId">
+                    @army.Name
+                </option>
+            }
+        </Selector>
+        <dt>Unit:</dt>
+        <Selector @bind-value="@SelectedUnitId">
+            <option value="">Please Choose An Option...</option>
+            @foreach (var unit in SelectedArmy?.AvailableUnits ?? new Unit[0])
+            {
+                <option value="@unit.UnitId">
+                    @unit.Name
+                </option>
+            }
+        </Selector>
+    </div>
+</form>
+
+@code {
+    [Parameter] private EventCallback<Unit> UnitChanged { get; set; }
+
+    ArmyStarter.Models.Army[] Armies { get; set; } = new ArmyStarter.Models.Army[0];
+    Unit[] Units { get; set; }
+
+    ArmyStarter.Models.Army SelectedArmy { get; set; }
+
+    Unit SelectedUnit { get; set; }
+
+    protected override async Task OnInitAsync()
+    {
+        Armies = await Http.GetJsonAsync<ArmyStarter.Models.Army[]>(Constants.ArmiesController);
+        Console.WriteLine(Armies[0].Name);
+    }
+
+    private string _selectedArmyId;
+    string SelectedArmyId
+    {
+        get => _selectedArmyId;
+        set
+        {
+            _selectedArmyId = value;
+            if (!string.IsNullOrEmpty(value))
+            {
+                var selectedArmyIdGuid = new Guid(value);
+                SelectedArmy = Armies.FirstOrDefault(army => army.ArmyId == selectedArmyIdGuid);
+            }
+            else
+            {
+                SelectedArmy = null;
+                SelectedUnitId = null;
+            }
+        }
+    }
+
+    private string _selectedUnitId;
+    string SelectedUnitId
+    {
+        get => _selectedUnitId;
+        set
+        {
+            _selectedUnitId = value;
+            if (!string.IsNullOrEmpty(value))
+            {
+                var selectedUnitIdGuid = new Guid(value);
+                SelectedUnit = SelectedArmy.AvailableUnits.FirstOrDefault(army => army.UnitId == selectedUnitIdGuid);
+                UnitChanged.InvokeAsync(SelectedUnit);
+            }
+            else
+            {
+                SelectedUnit = null;
+            }
+        }
+    }
+}

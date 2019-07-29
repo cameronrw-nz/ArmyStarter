@@ -1,0 +1,45 @@
+@using ArmyStarter.Models;
+@inject HttpClient Http
+
+
+@foreach (RosterPositionType type in (RosterPositionType[])Enum.GetValues(typeof(RosterPositionType)))
+{
+    <div>
+        <h3>@type.ToString()</h3>
+    </div>
+    @foreach (PlanUnit unit in PlanArmy.PlanUnits.Where(u => u.Unit.RosterPosition.RosterPositionEnum == type))
+    {
+        <div>
+            @unit.Unit.Name
+            @unit.Unit.RosterPosition.RosterPositionEnum
+            @type
+        </div>
+    }
+}
+
+
+@code {
+    [Parameter]
+    PlanArmy PlanArmy { get; set; }
+
+    bool IsAddingUnit { get; set; }
+
+    [Parameter] private EventCallback<PlanArmy> PlanArmyChanged { get; set; }
+
+    void Toggle()
+    {
+        IsAddingUnit = !IsAddingUnit;
+    }
+
+    Unit SelectedUnit { get; set; }
+
+    void SelectUnit(Unit unit)
+    {
+        SelectedUnit = unit;
+    }
+
+    void AddUnit()
+    {
+        PlanArmy.PlanUnits.Add(new PlanUnit() { Unit = SelectedUnit });
+    }
+}

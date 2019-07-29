@@ -1,0 +1,46 @@
+@using ArmyStarter.Models;
+@inject HttpClient Http
+
+@if (IsAddingUnit)
+{
+    <ArmyUnitSelector UnitChanged="@SelectUnit" />
+    <button class="oi oi-pulse align-bottom" @onclick="@AddUnit">Ok</button>
+}
+else
+{
+    <div class="d-flex">
+        <button class="oi oi-plus align-bottom" @onclick="@Toggle">Add</button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    PlanArmy PlanArmy { get; set; }
+
+    bool IsAddingUnit { get; set; }
+
+    [Parameter] private EventCallback<PlanArmy> PlanArmyChanged { get; set; }
+
+    void Toggle()
+    {
+        IsAddingUnit = !IsAddingUnit;
+    }
+
+    Unit SelectedUnit { get; set; }
+
+    void SelectUnit(Unit unit)
+    {
+        SelectedUnit = unit;
+    }
+
+    void AddUnit()
+    {
+        PlanArmy.PlanUnits.Add(new PlanUnit() { Unit = SelectedUnit });
+        UpdatePlanArmy();
+    }
+
+    private async Task UpdatePlanArmy()
+    {
+        await PlanArmyChanged.InvokeAsync(PlanArmy);
+    }
+}

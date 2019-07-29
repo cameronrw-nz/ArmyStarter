@@ -14,5 +14,7 @@ namespace ArmyStarter.Models
         public string Link { get; set; }
 
         public IList<Model> Models { get; set; }
+
+        public RosterPosition RosterPosition { get; set; }
     }
 }
