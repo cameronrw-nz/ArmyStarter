@@ -17,6 +17,8 @@ namespace ArmyStarter.Models
 
         public string Description { get; set; }
 
+        public string PointsLimit { get; set; }
+
         public IList<PlanUnit> PlanUnits { get; set; }
     }
 }

@@ -1,10 +1,26 @@
 @using ArmyStarter.Models;
 
-<div class="d-flex">
-    <h1>
-        @Header
-    </h1>
-    <span class="oi oi-pencil align-bottom" @onclick="@Toggle" />
+<div class="d-flex justify-content-between">
+    <div class="d-flex">
+        <h1>
+            @Header
+        </h1>
+        <span class="oi oi-pencil align-bottom" @onclick="@ToggleEditPlanArmyInfo" />
+    </div>
+    <div class="d-flex">
+        <h2>
+            Points:
+            @if (!IsEditingPoints)
+            {
+                @PlanArmy.PointsLimit
+            }
+        </h2>
+        @if (IsEditingPoints)
+        {
+            <input class="input" @bind="@PlanArmy.PointsLimit" />
+        }
+        <span class="oi oi-pencil align-bottom" @onclick="@TogglePoints" />
+    </div>
 </div>
 
 @if (PlanArmy.Description != null)
@@ -32,6 +48,8 @@
 
     bool IsEditingPlanArmyInfo { get; set; } = true;
 
+    bool IsEditingPoints { get; set; } = true;
+
     string Header => PlanArmy.Name ?? "Create Army Plan";
 
     void SelectArmy(PlanUnit armyUnit)
@@ -39,8 +57,13 @@
         selectedArmyUnit = armyUnit;
     }
 
-    void Toggle()
+    void ToggleEditPlanArmyInfo()
     {
         IsEditingPlanArmyInfo = !IsEditingPlanArmyInfo;
+    }
+
+    void TogglePoints()
+    {
+        IsEditingPoints = !IsEditingPoints;
     }
 }
