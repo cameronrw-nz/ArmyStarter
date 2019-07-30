@@ -14,7 +14,8 @@ namespace ArmyStarter.Models
             private set { RosterPositionEnum = EnumExtensions.ParseEnum<RosterPositionType>(value); }
         }
 
-        public RosterPositionType RosterPositionEnum;
+        [NotMapped]
+        public RosterPositionType RosterPositionEnum { get; set; }
     }
 
     public enum RosterPositionType

@@ -1,18 +1,16 @@
 @using ArmyStarter.Models;
 @inject HttpClient Http
 
-
-@foreach (RosterPositionType type in (RosterPositionType[])Enum.GetValues(typeof(RosterPositionType)))
+@foreach (var rosterToUnit in RosterToUnits.Where(a => a.Value.Count() != 0))
 {
     <div>
-        <h3>@type.ToString()</h3>
+        <h3>@rosterToUnit.Key.ToString()</h3>
     </div>
-    @foreach (PlanUnit unit in PlanArmy.PlanUnits.Where(u => u.Unit.RosterPosition.RosterPositionEnum == type))
+    @foreach (PlanUnit unit in rosterToUnit.Value)
     {
         <div>
             @unit.Unit.Name
             @unit.Unit.RosterPosition.RosterPositionEnum
-            @type
         </div>
     }
 }
@@ -22,24 +20,27 @@
     [Parameter]
     PlanArmy PlanArmy { get; set; }
 
+    [Parameter]
+    EventCallback<PlanArmy> PlanArmyChanged { get; set; }
+
     bool IsAddingUnit { get; set; }
-
-    [Parameter] private EventCallback<PlanArmy> PlanArmyChanged { get; set; }
-
-    void Toggle()
-    {
-        IsAddingUnit = !IsAddingUnit;
-    }
 
     Unit SelectedUnit { get; set; }
 
-    void SelectUnit(Unit unit)
+    Dictionary<RosterPositionType, IEnumerable<PlanUnit>> RosterToUnits { get; set; }
+
+    protected override void OnParametersSet()
     {
-        SelectedUnit = unit;
+        SetRosterDictionary();
     }
 
-    void AddUnit()
+    void SetRosterDictionary()
     {
-        PlanArmy.PlanUnits.Add(new PlanUnit() { Unit = SelectedUnit });
+        RosterToUnits = new Dictionary<RosterPositionType, IEnumerable<PlanUnit>>();
+        foreach (RosterPositionType type in (RosterPositionType[])Enum.GetValues(typeof(RosterPositionType)))
+        {
+            IEnumerable<PlanUnit> units = PlanArmy.PlanUnits.Where(u => u.Unit.RosterPosition.RosterPositionEnum == type);
+            RosterToUnits.Add(type, units);
+        }
     }
 }

@@ -39,7 +39,6 @@
     protected override async Task OnInitAsync()
     {
         Armies = await Http.GetJsonAsync<ArmyStarter.Models.Army[]>(Constants.ArmiesController);
-        Console.WriteLine(Armies[0].Name);
     }
 
     private string _selectedArmyId;

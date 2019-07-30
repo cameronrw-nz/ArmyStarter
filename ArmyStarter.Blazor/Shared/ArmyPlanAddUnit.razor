@@ -4,7 +4,7 @@
 @if (IsAddingUnit)
 {
     <ArmyUnitSelector UnitChanged="@SelectUnit" />
-    <button class="oi oi-pulse align-bottom" @onclick="@AddUnit">Ok</button>
+    <button class="oi oi-check align-bottom" @onclick="@AddUnit">Ok</button>
 }
 else
 {
@@ -36,6 +36,8 @@ else
     void AddUnit()
     {
         PlanArmy.PlanUnits.Add(new PlanUnit() { Unit = SelectedUnit });
+        SelectedUnit = null;
+        IsAddingUnit = false;
         UpdatePlanArmy();
     }
 
