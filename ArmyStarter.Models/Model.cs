@@ -33,6 +33,8 @@ namespace ArmyStarter.Models
 
         public int? FeelNoPainSave { get; set; }
 
+        public int DefaultModelsPerUnit { get; set; }
+
         public virtual IList<ModelWeapon> Weapons { get; set; }
     }
 }

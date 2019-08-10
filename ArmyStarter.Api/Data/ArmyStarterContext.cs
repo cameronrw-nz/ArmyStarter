@@ -14,6 +14,7 @@ namespace ArmyStarter.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ModelWeapon>().HasKey(e => new { e.ModelId, e.WeaponId});
+            modelBuilder.Entity<PlanModelWeapon>().HasKey(e => new { e.PlanModelId, e.WeaponId});
         }
 
         public object GetAllContent()

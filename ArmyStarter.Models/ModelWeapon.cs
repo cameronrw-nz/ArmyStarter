@@ -8,8 +8,11 @@ namespace ArmyStarter.Models
 
         public Guid WeaponId { get; set; }
 
+        public int PointsValue { get; set; }
+
         public virtual Model Model { get; set; }
 
         public virtual Weapon Weapon{ get; set; }
+
     }
 }

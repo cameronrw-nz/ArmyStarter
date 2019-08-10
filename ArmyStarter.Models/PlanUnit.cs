@@ -9,10 +9,13 @@ namespace ArmyStarter.Models
 
         public Guid PlanArmyId { get; set; }
 
+        public Unit Unit { get; set; }
+
         public IEnumerable<Note> Notes { get; set; }
 
         public IEnumerable<PlanOption> Options { get; set; }
 
-        public Unit Unit { get; set; }
+
+        public IEnumerable<PlanModel> SelectedModels {get; set;}
     }
 }
