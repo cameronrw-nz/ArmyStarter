@@ -148,7 +148,16 @@ app {
     color: white;
     padding: 2px 8px;
     background-image: linear-gradient(rgb(5, 39, 103) 0%, #3a0647 70%);
+    display: flex;
     margin-bottom: 0px;
+}
+
+.card-section-header-left {
+    flex: 1 1 auto;
+}
+
+.card-section-header-right {
+    justify-self: flex-end;
 }
 
 .card-content {
@@ -177,4 +186,18 @@ app {
     margin-left: 20px;
     border: 1px solid #adadad;
     flex: 1 1 auto
+}
+
+.unit-details-content {
+    padding: 8px;
+}
+
+.model-table-column-name {
+    width: 200px;
+    padding: 4px;
+}
+
+.model-table-column-characteristic {
+    width: 40px;
+    padding: 4px;
 }

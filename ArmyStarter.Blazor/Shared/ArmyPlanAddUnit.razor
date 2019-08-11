@@ -4,12 +4,12 @@
 @if (IsAddingUnit)
 {
     <ArmyUnitSelector UnitChanged="@SelectUnit" />
-    <button class="oi oi-check align-bottom" @onclick="@AddUnit">Ok</button>
+    <button class="oi oi-check align-bottom btn btn-primary" @onclick="@AddUnit">Ok</button>
 }
 else
 {
     <div class="d-flex">
-        <button class="oi oi-plus align-bottom" @onclick="@Toggle">Add</button>
+        <button class="oi oi-plus align-bottom btn btn-primary" @onclick="@Toggle">Add</button>
     </div>
 }
 
@@ -35,7 +35,16 @@ else
 
     void AddUnit()
     {
-        PlanArmy.PlanUnits.Add(new PlanUnit() { Unit = SelectedUnit });
+        var newUnit = new PlanUnit() { Unit = SelectedUnit };
+        newUnit.SelectedModels = new List<PlanModel>();
+        foreach (var model in SelectedUnit.Models)
+        {
+            if (model.DefaultModelsPerUnit > 0)
+            {
+                newUnit.SelectedModels.Add(new PlanModel() { Model = model, NumberOfModels = model.DefaultModelsPerUnit });
+            }
+        }
+        PlanArmy.PlanUnits.Add(newUnit);
         SelectedUnit = null;
         IsAddingUnit = false;
         UpdatePlanArmy();

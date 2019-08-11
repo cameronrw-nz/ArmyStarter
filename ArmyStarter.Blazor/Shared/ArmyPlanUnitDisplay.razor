@@ -2,8 +2,47 @@
 @inject HttpClient Http
 
 <div class="unit-details">
-    <h3 class="card-section-header">@PlanUnit.Unit.Name</h3>
-    @PlanUnit.Unit.UnitId.ToString();
+    <h3 class="card-section-header">
+        <span class="card-section-header-left">@PlanUnit.Unit.Name</span>
+        <span class="card-section-header-right">Pts: @TotalPoints</span>
+    </h3>
+    <div class="unit-details-content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="model-table-column-name">Name</th>
+                    <th class="model-table-column-characteristic">M</th>
+                    <th class="model-table-column-characteristic">WS</th>
+                    <th class="model-table-column-characteristic">BS</th>
+                    <th class="model-table-column-characteristic">S</th>
+                    <th class="model-table-column-characteristic">T</th>
+                    <th class="model-table-column-characteristic">W</th>
+                    <th class="model-table-column-characteristic">A</th>
+                    <th class="model-table-column-characteristic">LD</th>
+                    <th class="model-table-column-characteristic">Sv+</th>
+                    <th class="model-table-column-characteristic">Inv+</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var model in @PlanUnit.Unit.Models)
+                {
+                    <tr>
+                        <td>@model.Name</td>
+                        <td>@model.Movement</td>
+                        <td>@model.WeaponSkill</td>
+                        <td>@model.BallisticSkill</td>
+                        <td>@model.Strength</td>
+                        <td>@model.Toughness</td>
+                        <td>@model.Wounds</td>
+                        <td>@model.Attacks</td>
+                        <td>@model.LeaderShip</td>
+                        <td>@model.ArmourSave</td>
+                        <td>@model.InvulnerableSave</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @code {
@@ -12,4 +51,12 @@
 
     [Parameter]
     EventCallback<PlanUnit> PlanUnitChanged { get; set; }
+
+    int TotalPoints
+    {
+        get
+        {
+            return PlanUnit.SelectedModels?.Sum(model => model.Model.PointsValue * model.NumberOfModels) ?? 0;
+        }
+    }
 }

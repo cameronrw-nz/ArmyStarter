@@ -10,6 +10,8 @@ namespace ArmyStarter.Models
 
         public Guid ModelId { get; set; }
 
+        public int NumberOfModels { get; set; }
+
         public virtual IEnumerable<PlanModelWeapon> PlanModelWeapons { get; set; }
 
         public virtual Model Model { get; set; }

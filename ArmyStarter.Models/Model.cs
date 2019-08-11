@@ -35,6 +35,8 @@ namespace ArmyStarter.Models
 
         public int DefaultModelsPerUnit { get; set; }
 
+        public int MaximumModelsPerUnit { get; set; }
+
         public virtual IList<ModelWeapon> Weapons { get; set; }
     }
 }

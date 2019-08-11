@@ -16,6 +16,6 @@ namespace ArmyStarter.Models
         public IEnumerable<PlanOption> Options { get; set; }
 
 
-        public IEnumerable<PlanModel> SelectedModels {get; set;}
+        public IList<PlanModel> SelectedModels {get; set;}
     }
 }
