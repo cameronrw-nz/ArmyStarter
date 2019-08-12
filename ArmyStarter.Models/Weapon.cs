@@ -9,6 +9,8 @@ namespace ArmyStarter.Models
 
         public WeaponType WeaponType { get; set; }
 
+        public string Name { get; set; }
+
         public int Range { get; set; }
 
         public int Strength { get; set; }

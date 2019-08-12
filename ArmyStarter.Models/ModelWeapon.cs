@@ -10,9 +10,10 @@ namespace ArmyStarter.Models
 
         public int PointsValue { get; set; }
 
+        public bool CanBeSwapped { get; set; }
+
         public virtual Model Model { get; set; }
 
         public virtual Weapon Weapon{ get; set; }
-
     }
 }

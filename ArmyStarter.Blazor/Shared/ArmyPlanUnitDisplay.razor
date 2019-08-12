@@ -1,4 +1,5 @@
 @using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Provider
 @inject HttpClient Http
 
 <div class="unit-details">
@@ -42,6 +43,7 @@
                 }
             </tbody>
         </table>
+        @TotalWoundsOnGuardsmen
     </div>
 </div>
 
@@ -56,7 +58,26 @@
     {
         get
         {
-            return PlanUnit.SelectedModels?.Sum(model => model.Model.PointsValue * model.NumberOfModels) ?? 0;
+            return PlanUnit.SelectedModels?.Sum(model => model.Model.PointsValue * model.NumberOfModels + model.Model.Weapons.Sum(weapon => weapon.PointsValue) * model.NumberOfModels) ?? 0;
+        }
+    }
+
+    decimal TotalWoundsOnGuardsmen
+    {
+        get
+        {
+            CalculatorProvider calculatorProvider = new CalculatorProvider();
+            var defendingModel = new DefendingModel { Toughness = 3, ArmourSave = 5 };
+
+            decimal totalWounds = 0;
+            foreach (var model in PlanUnit.SelectedModels)
+            {
+                var attackingModel = new AttackingModel { ToHit = model.Model.BallisticSkill ?? 0, Strength = 4, Attacks = 2 * model.NumberOfModels, AP = 2 };
+                totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+            }
+
+            return totalWounds;
         }
     }
 }
