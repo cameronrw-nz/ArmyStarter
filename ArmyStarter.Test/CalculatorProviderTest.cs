@@ -26,5 +26,36 @@ namespace ArmyStarter.Test
 
             Assert.AreEqual(decimal.Divide(expectedResult, 6), toHitResult);
         }
+
+        [DataTestMethod]
+        [DataRow(4, 2, 5)]
+        [DataRow(4, 3, 4)]
+        [DataRow(4, 4, 3)]
+        [DataRow(4, 5, 2)]
+        [DataRow(4, 6, 2)]
+        [DataRow(4, 7, 2)]
+        [DataRow(4, 8, 1)]
+        [DataRow(8, 3, 5)]
+        [DataRow(8, 7, 4)]
+        [DataRow(8, 8, 3)]
+        [DataRow(8, 9, 2)]
+        public void ToWoundResult(int strength, int toughness, int expectedResult)
+        {
+            var toWoundResult = _calculatorProvider.GetToWoundResult(strength, toughness);
+
+            Assert.AreEqual(decimal.Divide(expectedResult, 6), toWoundResult);
+        }
+
+        [DataTestMethod]
+        [DataRow(2, 2, null, 3)]
+        [DataRow(2, 0, null, 5)]
+        [DataRow(4, 2, null, 1)]
+        [DataRow(2, 3, 3, 2)]
+        public void SaveResult(int ap, int armourSave, int? invulerableSave, int expectedResult)
+        {
+            var toWoundResult = _calculatorProvider.GetSaveResult(ap, armourSave, invulerableSave ?? 0);
+
+            Assert.AreEqual(decimal.Divide(expectedResult, 6), toWoundResult);
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace ArmyStarter.Blazor.Provider
             {
                 toWound = 4;
             }
-            else if (toughness / strength <= 0.5)
+            else if (decimal.Divide(toughness, strength) <= (decimal)0.5)
             {
                 toWound = 2;
             }
