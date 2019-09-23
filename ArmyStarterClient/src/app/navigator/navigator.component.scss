@@ -1,0 +1,30 @@
+@import "../Color.scss";
+
+.navigation {
+  background-color: $base-colour;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 200px;
+}
+
+.navigation-items {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20%;
+
+  a {
+    box-sizing: border-box;
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 4px 0px;
+    padding: 8px;
+    text-decoration: none;
+
+    &:hover {
+      background-color: $base-hover-colour;
+      cursor: pointer;
+    }
+  }
+}

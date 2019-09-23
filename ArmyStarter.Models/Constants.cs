@@ -2,7 +2,7 @@
 {
     public static class Constants
     {
-        public const string HostUrl = "http://localhost:90/";
+        public const string HostUrl = "https://localhost:44377/";
 
         public const string BaseUrl = "api/";
 
