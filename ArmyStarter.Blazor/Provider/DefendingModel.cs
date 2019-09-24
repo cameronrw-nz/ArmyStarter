@@ -2,6 +2,8 @@
 {
     public class DefendingModel
     {
+        public string Name { get; set; }
+
         public int Toughness { get; set; }
 
         public int? ArmourSave { get; set; }

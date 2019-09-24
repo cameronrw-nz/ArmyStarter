@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th class="model-table-column-name">Name</th>
+                    <th class="model-table-column-characteristic">Number Of Models</th>
                     <th class="model-table-column-characteristic">M</th>
                     <th class="model-table-column-characteristic">WS</th>
                     <th class="model-table-column-characteristic">BS</th>
@@ -29,6 +30,7 @@
                 {
                     <tr>
                         <td>@model.Name</td>
+                        <td>@GetNumberOfModels(@model.ModelId)</td>
                         <td>@model.Movement"</td>
                         <td>@model.WeaponSkill+</td>
                         <td>@model.BallisticSkill+</td>
@@ -43,7 +45,27 @@
                 }
             </tbody>
         </table>
-        @TotalWoundsOnGuardsmen
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Shooting</th>
+                        <th>Melee</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var defendingModel in DefendingModels)
+                    {
+                        <tr>
+                            <td>@defendingModel.Name</td>
+                            <td>@CalculateWoundsByShooting(defendingModel)</td>
+                            <td>@CalculateWoundsByMelee(defendingModel)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -62,22 +84,71 @@
         }
     }
 
-    decimal TotalWoundsOnGuardsmen
+    IList<DefendingModel> DefendingModels
     {
         get
         {
             CalculatorProvider calculatorProvider = new CalculatorProvider();
-            var defendingModel = new DefendingModel { Toughness = 3, ArmourSave = 5 };
+            var guardsman = new DefendingModel { Toughness = 3, ArmourSave = 5 };
 
-            decimal totalWounds = 0;
-            foreach (var model in PlanUnit.SelectedModels)
+            var defendingModels = new List<DefendingModel>()
             {
-                var attackingModel = new AttackingModel { ToHit = model.Model.BallisticSkill ?? 0, Strength = 4, Attacks = 2 * model.NumberOfModels, AP = 2 };
-                totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+                new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5 },
+                new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3 },
+                new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5 },
+                new DefendingModel { Name = "LV", Toughness = 6, ArmourSave = 3 },
+                new DefendingModel { Name = "HV", Toughness = 8, ArmourSave = 3, InvulnerableSave = 4 },
+            };
 
-            }
-
-            return totalWounds;
+            return defendingModels;
         }
+    }
+
+    string CalculateWoundsByShooting(DefendingModel defendingModel)
+    {
+        CalculatorProvider calculatorProvider = new CalculatorProvider();
+        decimal totalWounds = 0;
+        foreach (var model in PlanUnit.SelectedModels)
+        {
+            var modelWeapon = model.Model?.Weapons?.FirstOrDefault(weapon => weapon.Weapon.WeaponType != WeaponType.Melee);
+            if (modelWeapon != null)
+            {
+                var attackingModel = new AttackingModel {
+                    ToHit = model.Model.BallisticSkill ?? 0,
+                    Strength = modelWeapon.Weapon.Strength,
+                    Attacks = modelWeapon.Weapon.Attacks * model.NumberOfModels,
+                    AP = modelWeapon.Weapon.AP
+                };
+                totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+            }
+        }
+
+        return totalWounds.ToString("0.##");
+    }
+
+    string CalculateWoundsByMelee(DefendingModel defendingModel)
+    {
+        CalculatorProvider calculatorProvider = new CalculatorProvider();
+        decimal totalWounds = 0;
+        foreach (var model in PlanUnit.SelectedModels)
+        {
+            var modelWeapon = model.Model.Weapons?.FirstOrDefault(weapon => weapon.Weapon.WeaponType == WeaponType.Melee);
+            var attackingModel = new AttackingModel {
+                ToHit = model.Model.WeaponSkill ?? 0,
+                Strength = model.Model.Strength + (modelWeapon?.Weapon?.Strength ?? 0),
+                Attacks = model.Model.Attacks * model.NumberOfModels,
+                AP = (modelWeapon?.Weapon?.AP ?? 0)
+            };
+            totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+        }
+
+        return totalWounds.ToString("0.##");
+    }
+
+    int GetNumberOfModels(Guid modelId)
+    {
+        var selectedModel = PlanUnit.SelectedModels.FirstOrDefault(model => model.Model.ModelId == modelId);
+
+        return selectedModel != null ? selectedModel.NumberOfModels : 0;
     }
 }

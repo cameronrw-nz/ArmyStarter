@@ -15,6 +15,18 @@ namespace ArmyStarter.Test
             _calculatorProvider = new CalculatorProvider();
         }
 
+        [DataTestMethod]
+        [DataRow(4, 3, 6, 0, 1)]
+        [DataRow(4, 6, 12, 2, 5)]
+        [DataRow(2, 4, 6, 1, 2.78)]
+        public void TotalWoundsOnGuardsmenTest(int toHit, int strength, int attacks, int ap, double expectedResult)
+        {
+            var attackingModel = new AttackingModel { ToHit = toHit, Strength = strength, Attacks = attacks, AP = ap };
+            var defendingModel = new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5 };
+            var totalWoundsResult = _calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+            Assert.AreEqual((decimal)expectedResult, totalWoundsResult);
+        }
 
         [DataTestMethod]
         [DataRow(1, 6)]
@@ -48,14 +60,14 @@ namespace ArmyStarter.Test
 
         [DataTestMethod]
         [DataRow(2, 2, null, 3)]
-        [DataRow(2, 0, null, 5)]
-        [DataRow(4, 2, null, 1)]
-        [DataRow(2, 3, 3, 2)]
+        [DataRow(2, 0, null, 1)]
+        [DataRow(4, 2, null, 5)]
+        [DataRow(2, 3, 3, 4)]
         public void SaveResult(int ap, int armourSave, int? invulerableSave, int expectedResult)
         {
-            var toWoundResult = _calculatorProvider.GetSaveResult(ap, armourSave, invulerableSave ?? 0);
+            var toSaveResult = _calculatorProvider.GetSaveResult(ap, armourSave, invulerableSave ?? 0);
 
-            Assert.AreEqual(decimal.Divide(expectedResult, 6), toWoundResult);
+            Assert.AreEqual(decimal.Divide(expectedResult, 6), toSaveResult);
         }
     }
 }

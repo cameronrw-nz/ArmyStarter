@@ -15,7 +15,7 @@ namespace ArmyStarter.Blazor.Provider
 
             Console.WriteLine($"To Hit: ${toHitResult}, ${attackingModel.ToHit}");
 
-            return toHitResult * toWoundResult * saveResult * attackingModel.Attacks;
+            return Math.Round(toHitResult * toWoundResult * saveResult * attackingModel.Attacks, 2);
         }
 
         public decimal GetToHitResult(int toHit, int toHitModifier = 0)
@@ -73,7 +73,7 @@ namespace ArmyStarter.Blazor.Provider
                 saveValue = invulnerableSave;
             }
 
-            return decimal.Divide(7 - saveValue, 6);
+            return 1 - decimal.Divide(7 - saveValue, 6);
         }
     }
 }
