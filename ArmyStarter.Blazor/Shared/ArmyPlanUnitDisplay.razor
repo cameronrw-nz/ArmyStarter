@@ -46,10 +46,14 @@
             </tbody>
         </table>
         <div>
+            <h3>
+                Squads Average Wounds
+            </h3>
             <table>
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Stats</th>
                         <th>Shooting</th>
                         <th>Melee</th>
                     </tr>
@@ -59,6 +63,7 @@
                     {
                         <tr>
                             <td>@defendingModel.Name</td>
+                            <td>@GetStatsString(defendingModel)</td>
                             <td>@CalculateWoundsByShooting(defendingModel)</td>
                             <td>@CalculateWoundsByMelee(defendingModel)</td>
                         </tr>
@@ -150,5 +155,21 @@
         var selectedModel = PlanUnit.SelectedModels.FirstOrDefault(model => model.Model.ModelId == modelId);
 
         return selectedModel != null ? selectedModel.NumberOfModels : 0;
+    }
+
+    string GetStatsString(DefendingModel defendingModel)
+    {
+        string stats = $"T{defendingModel.Toughness}";
+        if (defendingModel.ArmourSave != null)
+        {
+            stats += $"/{defendingModel.ArmourSave}+";
+        }
+        
+        if (defendingModel.InvulnerableSave != null)
+        {
+            stats += $"/{defendingModel.InvulnerableSave}++";
+        }
+
+        return stats;
     }
 }
