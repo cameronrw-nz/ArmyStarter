@@ -2,6 +2,8 @@
 {
     public class AttackingModel
     {
+        public string Name { get; set; }
+
         public int ToHit { get; set; }
 
         public int Strength { get; set; }
