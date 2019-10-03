@@ -376,3 +376,108 @@ VALUES (
 	@TwistBrayId,
 	0,
 	0)
+
+
+
+---- Genestealer Cult ----
+
+DECLARE @GenestealerCult uniqueidentifier = NEWID();
+
+DECLARE @AcolyteHybridsUnit uniqueidentifier = NEWID();
+
+DECLARE @AcolyteHybridLeader uniqueidentifier = NEWID();
+DECLARE @AcolyteHybrid uniqueidentifier = NEWID();
+
+DECLARE @AutoPistolId uniqueidentifier = NEWID();
+DECLARE @CultistKnifeId uniqueidentifier = NEWID();
+DECLARE @HandFlamerId uniqueidentifier = NEWID();
+DECLARE @RendingClawsId uniqueidentifier = NEWID();
+
+
+INSERT INTO Army (ArmyId, Name) VALUES (@GenestealerCult, 'Genestealer Cult')
+	
+INSERT INTO Unit (ArmyId, Cost, Name, UnitId, RosterPositionType) VALUES (@GenestealerCult, 0, 'Acolyte Hybrids', @AcolyteHybridsUnit, 'Troop')
+
+INSERT INTO Model (
+	ModelId,
+	UnitId,
+	Name,
+	PointsValue,
+	Movement,
+	WeaponSkill,
+	BallisticSkill,
+	Strength,
+	Toughness,
+	Wounds,
+	Attacks,
+	LeaderShip,
+	ArmourSave,
+	InvulnerableSave,
+	DefaultModelsPerUnit,
+	MaximumModelsPerUnit)
+VALUES (
+	@AcolyteHybridLeader,
+	@AcolyteHybridsUnit,
+	'Acolyte Leader',
+	7,
+	6,
+	3,
+	4,
+	4,
+	3,
+	1,
+	3,
+	8,
+	5,
+	NULL,
+	1,
+	1)
+
+INSERT INTO Model (
+	ModelId,
+	UnitId,
+	Name,
+	PointsValue,
+	Movement,
+	WeaponSkill,
+	BallisticSkill,
+	Strength,
+	Toughness,
+	Wounds,
+	Attacks,
+	LeaderShip,
+	ArmourSave,
+	InvulnerableSave,
+	DefaultModelsPerUnit,
+	MaximumModelsPerUnit)
+VALUES (
+	@AcolyteHybrid,
+	@AcolyteHybridsUnit,
+	'Acolyte Hybrid',
+	7,
+	6,
+	3,
+	4,
+	4,
+	3,
+	1,
+	2,
+	7,
+	5,
+	NULL,
+	4,
+	19)
+
+INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength) VALUES (@AutoPistolId, 0, 1, 'Autopistol', 1, 12, 3)
+INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength) VALUES (@CultistKnifeId, 0, 1, 'Cultist Knife', 0, 0, 0)
+INSERT INTO Weapon (WeaponId, AP, Name, WeaponType, Range, Strength) VALUES (@RendingClawsId, 1, 'Rending Claws', 0, 0, 0)
+INSERT INTO Weapon (WeaponId, AP, RandomAttacks, Name, WeaponType, Range, Strength) VALUES (@HandFlamerId, 0, 6, 'Hand Flamer', 1, 12, 3)
+	
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue) VALUES (@AutoPistolId, @AcolyteHybridLeader, 0, 0)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue) VALUES (@CultistKnifeId, @AcolyteHybridLeader, 0, 0)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue) VALUES (@RendingClawsId, @AcolyteHybridLeader, 0, 0)
+
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue) VALUES (@AutoPistolId, @AcolyteHybrid, 1, 0)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue) VALUES (@CultistKnifeId, @AcolyteHybrid, 1, 0)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue) VALUES (@RendingClawsId, @AcolyteHybrid, 1, 0)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, SwappedWithWeaponId, MaximumPerModel) VALUES (@HandFlamerId, @AcolyteHybrid, 1, 0, @AutoPistolId, 1)

@@ -8,7 +8,7 @@
 
         public int Strength { get; set; }
 
-        public int Attacks { get; set; }
+        public decimal Attacks { get; set; }
 
         public int AP { get; set; }
     }

@@ -17,7 +17,9 @@ namespace ArmyStarter.Models
 
         public int AP { get; set; }
 
-        public int Attacks { get; set; }
+        public int? Attacks { get; set; }
+
+        public int? RandomAttacks { get; set; }
 
         public virtual IList<ModelWeapon> ModelWeapons { get; set; }
     }

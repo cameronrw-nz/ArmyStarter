@@ -30,7 +30,14 @@
                 {
                     <tr>
                         <td>@model.Name</td>
-                        <td>@GetNumberOfModels(@model.ModelId)</td>
+                        <td>
+                            <input class="input"
+                                   max="@model.MaximumModelsPerUnit"
+                                   min="@model.MinimumModelsPerUnit"
+                                   type="number"
+                                   @onchange=@(newValue => ChangeSelectedModelNumber(newValue, model.ModelId))
+                                   value="@GetNumberOfModels(@model.ModelId)" />
+                        </td>
                         <td>@model.Movement"</td>
                         <td>@model.WeaponSkill+</td>
                         <td>@model.BallisticSkill+</td>
@@ -45,6 +52,47 @@
                 }
             </tbody>
         </table>
+        <div>
+            <h3>
+                Weapons
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Points</th>
+                        <th>Range</th>
+                        <th>Weapon Type</th>
+                        <th>Strength</th>
+                        <th>AP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var selectedModel in PlanUnit.SelectedModels)
+                    {
+                        @foreach (var modelWeapon in selectedModel.Model.Weapons)
+                        {
+                            <tr>
+                                <td>@modelWeapon.Weapon.Name</td>
+                                <td>
+                                    <input class="input"
+                                           max="@modelWeapon.MaximumPerModel * @selectedModel.NumberOfModels"
+                                           min="0"
+                                           type="number"
+                                           @onchange=@(newValue => ChangeWeaponNumbers(newValue, selectedModel.PlanModelId, modelWeapon.WeaponId))
+                                           value="@GetNumberOfWeapons(modelWeapon)" />
+                                </td>
+                                <td>@modelWeapon.PointsValue</td>
+                                <td>@modelWeapon.Weapon.Range</td>
+                                <td>@modelWeapon.Weapon.WeaponType.ToString()</td>
+                                <td>@modelWeapon.Weapon.Strength</td>
+                                <td>@modelWeapon.Weapon.AP</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
         <div>
             <h3>
                 Squads Average Wounds
@@ -87,12 +135,12 @@
                 <tbody>
                     @foreach (var attackingModel in AttackingModels)
                     {
-                    <tr>
-                        <td>@attackingModel.Name</td>
-                        <td>@GetAttackingStatsString(attackingModel)</td>
-                        <td>@CalculateWoundsOnUnit(attackingModel)</td>
-                        <td>@CalculateAverageShotsToKill(attackingModel)</td>
-                    </tr>
+                        <tr>
+                            <td>@attackingModel.Name</td>
+                            <td>@GetAttackingStatsString(attackingModel)</td>
+                            <td>@CalculateWoundsOnUnit(attackingModel)</td>
+                            <td>@CalculateAverageShotsToKill(attackingModel)</td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -123,7 +171,7 @@
             var guardsman = new DefendingModel { Toughness = 3, ArmourSave = 5 };
 
             var defendingModels = new List<DefendingModel>()
-        {
+{
                 new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5 },
                 new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3 },
                 new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5 },
@@ -144,11 +192,21 @@
             var modelWeapon = model.Model?.Weapons?.FirstOrDefault(weapon => weapon.Weapon.WeaponType != WeaponType.Melee);
             if (modelWeapon != null)
             {
+                decimal attacks = 0;
+                if (modelWeapon.Weapon.RandomAttacks != null)
+                {
+                    attacks = (((int)modelWeapon.Weapon.RandomAttacks) + 1) / 2;
+                }
+                else
+                {
+                    attacks = modelWeapon.Weapon.Attacks ?? 0;
+                }
+
                 var attackingModel = new AttackingModel
                 {
                     ToHit = model.Model.BallisticSkill ?? 0,
                     Strength = modelWeapon.Weapon.Strength,
-                    Attacks = modelWeapon.Weapon.Attacks * model.NumberOfModels,
+                    Attacks = attacks * model.NumberOfModels,
                     AP = modelWeapon.Weapon.AP
                 };
                 totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
@@ -202,7 +260,7 @@
             var guardsman = new DefendingModel { Toughness = 3, ArmourSave = 5 };
 
             var attackingModels = new List<AttackingModel>()
-        {
+{
                 new AttackingModel{ Name = "GEQ", ToHit = 4, Attacks = 1, AP = 0, Strength = 3 },
                 new AttackingModel{ Name = "MEQ", ToHit = 3, Attacks = 1, AP = 0, Strength = 4 },
                 new AttackingModel{ Name = "Anti-HI", ToHit = 3, Attacks = 1, AP = 1, Strength = 8 },
@@ -279,5 +337,46 @@
         return selectedModel != null ? selectedModel.NumberOfModels : 0;
     }
 
+    void ChangeSelectedModelNumber(UIChangeEventArgs value, Guid modelId)
+    {
+        var selectedModel = PlanUnit.SelectedModels.FirstOrDefault(model => model.Model.ModelId == modelId);
 
+        if (selectedModel != null)
+        {
+            selectedModel.NumberOfModels = int.Parse(value.Value.ToString());
+        }
+    }
+
+    int GetNumberOfWeapons(ModelWeapon modelWeapon)
+    {
+        var selectedModel = PlanUnit.SelectedModels.FirstOrDefault(model => model.Model.ModelId == modelWeapon.ModelId);
+
+        var selectedWeapon = selectedModel?.PlanModelWeapons?.FirstOrDefault(pmw => pmw.WeaponId == modelWeapon.WeaponId);
+        Console.WriteLine(selectedModel.PlanModelWeapons?.Count);
+
+
+        return selectedWeapon != null ? selectedWeapon.Quantity : 0;
+    }
+
+    void ChangeWeaponNumbers(UIChangeEventArgs value, Guid planModelId, Guid weaponId)
+    {
+        var selectedModel = PlanUnit.SelectedModels?.FirstOrDefault(model => model.PlanModelId == planModelId);
+        var planModelWeapon = selectedModel?.PlanModelWeapons?.FirstOrDefault(weapon => weapon.WeaponId == weaponId);
+        if (planModelWeapon != null)
+        {
+            planModelWeapon.Quantity = int.Parse(value.Value.ToString());
+        }
+        else
+        {
+            var modelWeapon = selectedModel?.Model?.Weapons?.FirstOrDefault(weapon => weapon.WeaponId == weaponId);
+            if (selectedModel.PlanModelWeapons == null)
+            {
+                selectedModel.PlanModelWeapons = new List<PlanModelWeapon>();
+            }
+            selectedModel.PlanModelWeapons.Add(new PlanModelWeapon { PlanModelId = planModelId, WeaponId = weaponId, Weapon = modelWeapon?.Weapon, Quantity = int.Parse(value.Value.ToString()) });
+            Console.WriteLine(int.Parse(value.Value.ToString()));
+        }
+
+        PlanUnitChanged.InvokeAsync(PlanUnit);
+    }
 }

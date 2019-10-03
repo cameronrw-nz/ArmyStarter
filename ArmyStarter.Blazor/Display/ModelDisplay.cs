@@ -13,7 +13,6 @@ namespace ArmyStarter.Blazor.Display
         public ModelDisplay(Model model)
         {
             Model = model;
-            Console.WriteLine(NumberOfModels);
             NumberOfModels = 1;
 
         }
@@ -24,13 +23,11 @@ namespace ArmyStarter.Blazor.Display
         {
             get
             {
-                Console.WriteLine("get number");
                 return numberOfModels;
             }
             set
             {
                 numberOfModels = value;
-                Console.WriteLine("Set number");
             }
         }
 

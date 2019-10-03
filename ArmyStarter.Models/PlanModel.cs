@@ -12,7 +12,7 @@ namespace ArmyStarter.Models
 
         public int NumberOfModels { get; set; }
 
-        public virtual IEnumerable<PlanModelWeapon> PlanModelWeapons { get; set; }
+        public virtual IList<PlanModelWeapon> PlanModelWeapons { get; set; } = new List<PlanModelWeapon>();
 
         public virtual Model Model { get; set; }
     }

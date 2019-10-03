@@ -13,15 +13,12 @@ namespace ArmyStarter.Blazor.Provider
             var toWoundResult = GetToWoundResult(attackingModel.Strength, defendingModel.Toughness);
             var saveResult = GetSaveResult(attackingModel.AP, defendingModel.ArmourSave ?? 0, defendingModel.InvulnerableSave ?? 0);
 
-            Console.WriteLine($"To Hit: ${toHitResult}, ${attackingModel.ToHit}");
-
             return Math.Round(toHitResult * toWoundResult * saveResult * attackingModel.Attacks, 2);
         }
 
         public decimal GetToHitResult(int toHit, int toHitModifier = 0)
         {
             var requiredToHit = toHit + toHitModifier;
-            Console.WriteLine($"To Hit: ${requiredToHit} : ${4/6}");
 
             if (requiredToHit > 6)
             {
