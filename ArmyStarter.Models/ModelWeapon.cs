@@ -12,6 +12,8 @@ namespace ArmyStarter.Models
 
         public bool CanBeSwapped { get; set; }
 
+        public bool IsDefaultWeapon { get; set; }
+
         public Guid? SwappedWithWeaponId { get; set; }
 
         public decimal MaximumPerModel { get; set; }

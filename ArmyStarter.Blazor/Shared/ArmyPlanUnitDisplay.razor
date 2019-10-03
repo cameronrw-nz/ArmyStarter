@@ -60,6 +60,7 @@
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Quantity</th>
                         <th>Points</th>
                         <th>Range</th>
                         <th>Weapon Type</th>
@@ -76,7 +77,7 @@
                                 <td>@modelWeapon.Weapon.Name</td>
                                 <td>
                                     <input class="input"
-                                           max="@modelWeapon.MaximumPerModel * @selectedModel.NumberOfModels"
+                                           max="@(modelWeapon.MaximumPerModel * @selectedModel.NumberOfModels)"
                                            min="0"
                                            type="number"
                                            @onchange=@(newValue => ChangeWeaponNumbers(newValue, selectedModel.PlanModelId, modelWeapon.WeaponId))
@@ -159,7 +160,7 @@
     {
         get
         {
-            return PlanUnit.SelectedModels?.Sum(model => model.Model.PointsValue * model.NumberOfModels + model.Model.Weapons.Sum(weapon => weapon.PointsValue) * model.NumberOfModels) ?? 0;
+            return PlanUnit.SelectedModels?.Sum(model => model.Model.PointsValue * model.NumberOfModels + model.PlanModelWeapons.Sum(weapon => weapon.Quantity * (model.Model.Weapons.FirstOrDefault(w => w.WeaponId == weapon.WeaponId)?.PointsValue))) ?? 0;
         }
     }
 
@@ -189,8 +190,7 @@
         decimal totalWounds = 0;
         foreach (var model in PlanUnit.SelectedModels)
         {
-            var modelWeapon = model.Model?.Weapons?.FirstOrDefault(weapon => weapon.Weapon.WeaponType != WeaponType.Melee);
-            if (modelWeapon != null)
+            foreach (var modelWeapon in model.PlanModelWeapons.Where(weapon => weapon.Weapon.WeaponType != WeaponType.Melee))
             {
                 decimal attacks = 0;
                 if (modelWeapon.Weapon.RandomAttacks != null)
@@ -206,7 +206,7 @@
                 {
                     ToHit = model.Model.BallisticSkill ?? 0,
                     Strength = modelWeapon.Weapon.Strength,
-                    Attacks = attacks * model.NumberOfModels,
+                    Attacks = attacks * modelWeapon.Quantity,
                     AP = modelWeapon.Weapon.AP
                 };
                 totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
@@ -352,8 +352,6 @@
         var selectedModel = PlanUnit.SelectedModels.FirstOrDefault(model => model.Model.ModelId == modelWeapon.ModelId);
 
         var selectedWeapon = selectedModel?.PlanModelWeapons?.FirstOrDefault(pmw => pmw.WeaponId == modelWeapon.WeaponId);
-        Console.WriteLine(selectedModel.PlanModelWeapons?.Count);
-
 
         return selectedWeapon != null ? selectedWeapon.Quantity : 0;
     }
@@ -362,19 +360,25 @@
     {
         var selectedModel = PlanUnit.SelectedModels?.FirstOrDefault(model => model.PlanModelId == planModelId);
         var planModelWeapon = selectedModel?.PlanModelWeapons?.FirstOrDefault(weapon => weapon.WeaponId == weaponId);
+        var modelWeapon = selectedModel.Model.Weapons.FirstOrDefault(mw => mw.WeaponId == weaponId);
+
+        if (modelWeapon != null && modelWeapon.CanBeSwapped && modelWeapon.SwappedWithWeaponId != null)
+        {
+            var swappedWeaponToChange = selectedModel?.PlanModelWeapons?.FirstOrDefault(weapon => weapon.WeaponId == modelWeapon.SwappedWithWeaponId);
+            if (swappedWeaponToChange != null)
+            {
+                var differenceInQuantity =  int.Parse(value.Value.ToString()) - (planModelWeapon?.Quantity ?? 0);
+                swappedWeaponToChange.Quantity = swappedWeaponToChange.Quantity - differenceInQuantity;
+            }
+        }
+
         if (planModelWeapon != null)
         {
             planModelWeapon.Quantity = int.Parse(value.Value.ToString());
         }
         else
         {
-            var modelWeapon = selectedModel?.Model?.Weapons?.FirstOrDefault(weapon => weapon.WeaponId == weaponId);
-            if (selectedModel.PlanModelWeapons == null)
-            {
-                selectedModel.PlanModelWeapons = new List<PlanModelWeapon>();
-            }
             selectedModel.PlanModelWeapons.Add(new PlanModelWeapon { PlanModelId = planModelId, WeaponId = weaponId, Weapon = modelWeapon?.Weapon, Quantity = int.Parse(value.Value.ToString()) });
-            Console.WriteLine(int.Parse(value.Value.ToString()));
         }
 
         PlanUnitChanged.InvokeAsync(PlanUnit);

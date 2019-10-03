@@ -41,7 +41,23 @@ else
         {
             if (model.DefaultModelsPerUnit > 0)
             {
-                newUnit.SelectedModels.Add(new PlanModel() { Model = model, NumberOfModels = model.DefaultModelsPerUnit });
+                var planModel = new PlanModel()
+                {
+                    Model = model,
+                    NumberOfModels = model.DefaultModelsPerUnit,
+                    PlanModelId = Guid.NewGuid(),
+                    PlanModelWeapons = new List<PlanModelWeapon>()
+                };
+
+                foreach (var weapon in model.Weapons)
+                {
+                    if (weapon.IsDefaultWeapon)
+                    {
+                        planModel.PlanModelWeapons.Add(new PlanModelWeapon { PlanModel = planModel, PlanModelId = planModel.PlanModelId, Quantity = model.DefaultModelsPerUnit, Weapon = weapon.Weapon, WeaponId = weapon.WeaponId });
+                    }
+                }
+
+                newUnit.SelectedModels.Add(planModel);
             }
         }
         PlanArmy.PlanUnits.Add(newUnit);
