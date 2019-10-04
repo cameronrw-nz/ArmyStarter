@@ -53,13 +53,16 @@
             </tbody>
         </table>
         <div>
-            <h3>
-                Weapons
-            </h3>
+            <div class="d-flex">
+                <h3>
+                    Weapons
+                </h3>
+                <span class="oi oi-pencil align-bottom" @onclick="@ToggleEdittingWeapons" />
+            </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Weapon</th>
                         <th>Quantity</th>
                         <th>Points</th>
                         <th>Range</th>
@@ -69,26 +72,51 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var selectedModel in PlanUnit.SelectedModels)
+
+                    @if (IsEdittingWeapons)
                     {
-                        @foreach (var modelWeapon in selectedModel.Model.Weapons)
+
+                        @foreach (var selectedModel in PlanUnit.SelectedModels)
                         {
-                            <tr>
-                                <td>@modelWeapon.Weapon.Name</td>
-                                <td>
-                                    <input class="input"
-                                           max="@(modelWeapon.MaximumPerModel * @selectedModel.NumberOfModels)"
-                                           min="0"
-                                           type="number"
-                                           @onchange=@(newValue => ChangeWeaponNumbers(newValue, selectedModel.PlanModelId, modelWeapon.WeaponId))
-                                           value="@GetNumberOfWeapons(modelWeapon)" />
-                                </td>
-                                <td>@modelWeapon.PointsValue</td>
-                                <td>@modelWeapon.Weapon.Range</td>
-                                <td>@modelWeapon.Weapon.WeaponType.ToString()</td>
-                                <td>@modelWeapon.Weapon.Strength</td>
-                                <td>@modelWeapon.Weapon.AP</td>
-                            </tr>
+                            <tr><td>@selectedModel.Model.Name</td></tr>
+                            @foreach (var modelWeapon in selectedModel.Model.Weapons)
+                            {
+                                <tr>
+                                    <td>@modelWeapon.Weapon.Name</td>
+                                    <td>
+                                        <input class="input"
+                                               max="@(modelWeapon.MaximumPerModel * @selectedModel.NumberOfModels)"
+                                               min="0"
+                                               type="number"
+                                               @onchange=@(newValue => ChangeWeaponNumbers(newValue, selectedModel.PlanModelId, modelWeapon.WeaponId))
+                                               value="@GetNumberOfWeapons(modelWeapon)" />
+                                    </td>
+                                    <td>@modelWeapon.PointsValue</td>
+                                    <td>@modelWeapon.Weapon.Range"</td>
+                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.WeaponType.ToString() + modelWeapon.Weapon.Attacks : modelWeapon.Weapon.WeaponType.ToString())</td>
+                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.Strength.ToString() : modelWeapon.Weapon.Strength == 0 ? "User" : modelWeapon.Weapon.Strength.ToString())</td>
+                                    <td>@(modelWeapon.Weapon.AP > 0 ? -modelWeapon.Weapon.AP : 0)</td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var selectedModel in PlanUnit.SelectedModels)
+                        {
+                            <tr><td>@selectedModel.Model.Name</td></tr>
+                            @foreach (var modelWeapon in selectedModel.Model.Weapons.Where(mw => selectedModel.PlanModelWeapons.FirstOrDefault(pmw => pmw.WeaponId == mw.WeaponId)?.Quantity > 0))
+                            {
+                                <tr>
+                                    <td>@modelWeapon.Weapon.Name</td>
+                                    <td>@GetNumberOfWeapons(modelWeapon)</td>
+                                    <td>@modelWeapon.PointsValue</td>
+                                    <td>@modelWeapon.Weapon.Range"</td>
+                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.WeaponType.ToString() + modelWeapon.Weapon.Attacks : modelWeapon.Weapon.WeaponType.ToString())</td>
+                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.Strength.ToString() : modelWeapon.Weapon.Strength == 0 ? "User" : modelWeapon.Weapon.Strength.ToString())</td>
+                                    <td>@(modelWeapon.Weapon.AP > 0 ? -modelWeapon.Weapon.AP : 0)</td>
+                                </tr>
+                            }
                         }
                     }
                 </tbody>
@@ -155,6 +183,13 @@
 
     [Parameter]
     EventCallback<PlanUnit> PlanUnitChanged { get; set; }
+
+    bool IsEdittingWeapons { get; set; }
+
+    void ToggleEdittingWeapons()
+    {
+        IsEdittingWeapons = !IsEdittingWeapons;
+    }
 
     int TotalPoints
     {
@@ -339,11 +374,18 @@
 
     void ChangeSelectedModelNumber(UIChangeEventArgs value, Guid modelId)
     {
+        var newNumberOfModels = int.Parse(value.Value.ToString());
         var selectedModel = PlanUnit.SelectedModels.FirstOrDefault(model => model.Model.ModelId == modelId);
 
         if (selectedModel != null)
         {
-            selectedModel.NumberOfModels = int.Parse(value.Value.ToString());
+            var difference = newNumberOfModels - selectedModel.NumberOfModels;
+
+            foreach (var weapon in selectedModel.PlanModelWeapons.Where(w => selectedModel.Model.Weapons.FirstOrDefault(mw => mw.WeaponId == w.WeaponId).IsDefaultWeapon))
+            {
+                weapon.Quantity += difference;
+            }
+            selectedModel.NumberOfModels = newNumberOfModels;
         }
     }
 
@@ -367,7 +409,7 @@
             var swappedWeaponToChange = selectedModel?.PlanModelWeapons?.FirstOrDefault(weapon => weapon.WeaponId == modelWeapon.SwappedWithWeaponId);
             if (swappedWeaponToChange != null)
             {
-                var differenceInQuantity =  int.Parse(value.Value.ToString()) - (planModelWeapon?.Quantity ?? 0);
+                var differenceInQuantity = int.Parse(value.Value.ToString()) - (planModelWeapon?.Quantity ?? 0);
                 swappedWeaponToChange.Quantity = swappedWeaponToChange.Quantity - differenceInQuantity;
             }
         }

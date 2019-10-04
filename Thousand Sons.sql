@@ -22,6 +22,7 @@ DECLARE @SorcerorId uniqueidentifier = '5A9E0835-CE82-4483-9AD9-0EB36B2E72FF'
 --Weapons
 DECLARE @ForceSwordId uniqueidentifier = NEWID();
 DECLARE @InfernoBolterId uniqueidentifier = NEWID();
+DECLARE @WarpFlamerId uniqueidentifier = NEWID();
 DECLARE @InfernoCombiBolterId uniqueidentifier = NEWID();
 DECLARE @TzaangorBladeId uniqueidentifier = NEWID();
 
@@ -254,128 +255,23 @@ VALUES (
 	1,
 	1)
 
-INSERT INTO Weapon (
-	WeaponId,
-	AP,
-	Attacks,
-	Name,
-	WeaponType,
-	Range,
-	Strength)
-VALUES (
-	@InfernoBolterId,
-	2,
-	1,
-	'Inferno Bolter',
-	3,
-	24,
-	4)
+INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength) VALUES (@InfernoBolterId, 2, 1, 'Inferno Bolter', 3, 24, 4)
+INSERT INTO Weapon (WeaponId, AP, RandomAttacks, Name, WeaponType, Range, Strength) VALUES (@WarpFlamerId, 2, 6, 'Warpflamer', 2, 12, 4)
 
-INSERT INTO ModelWeapon (
-	WeaponId,
-	ModelId,
-	CanBeSwapped,
-	PointsValue)
-VALUES (
-	@InfernoBolterId,
-	@RubricMarineId,
-	1,
-	2)
+INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength) VALUES (@InfernoCombiBolterId, 2, 2, 'Inferno Bolter', 3, 24, 4)
+INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength) VALUES (@ForceSwordId, 3, 0, 'Force Sword', 0, 0, 0)
+INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength) VALUES (@TzaangorBladeId, 1, 1, 'Tzaangor Blades', 0, 0, 0)
 
-INSERT INTO Weapon (
-	WeaponId,
-	AP,
-	Attacks,
-	Name,
-	WeaponType,
-	Range,
-	Strength)
-VALUES (
-	@InfernoCombiBolterId,
-	2,
-	2,
-	'Inferno Bolter',
-	3,
-	24,
-	4)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@InfernoBolterId, @RubricMarineId, 1, 2, 1, 1)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, SwappedWithWeaponId, MaximumPerModel) VALUES (@WarpFlamerId, @RubricMarineId, 1, 10, 0, @InfernoBolterId, 1)
+INSERT INTO ModelWeapon (WeaponId, ModelId,	CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@InfernoCombiBolterId, @SorcerorId, 0, 3, 1, 1)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@ForceSwordId, @SorcerorId, 0, 8, 1, 1)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@TzaangorBladeId, @TzaangorId, 0, 0, 1, 1)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@TzaangorBladeId, @TwistBrayId, 0,0, 1, 1)
 
-INSERT INTO Weapon (
-	WeaponId,
-	AP,
-	Attacks,
-	Name,
-	WeaponType,
-	Range,
-	Strength)
-VALUES (
-	@ForceSwordId,
-	3,
-	0,
-	'Force Sword',
-	0,
-	0,
-	0)
 
-INSERT INTO ModelWeapon (
-	WeaponId,
-	ModelId,
-	CanBeSwapped,
-	PointsValue)
-VALUES (
-	@InfernoCombiBolterId,
-	@SorcerorId,
-	0,
-	3)
 
-INSERT INTO ModelWeapon (
-	WeaponId,
-	ModelId,
-	CanBeSwapped,
-	PointsValue)
-VALUES (
-	@ForceSwordId,
-	@SorcerorId,
-	0,
-	8)
 
-INSERT INTO Weapon (
-	WeaponId,
-	AP,
-	Attacks,
-	Name,
-	WeaponType,
-	Range,
-	Strength)
-VALUES (
-	@TzaangorBladeId,
-	1,
-	1,
-	'Tzaangor Blades',
-	0,
-	0,
-	0)
-
-INSERT INTO ModelWeapon (
-	WeaponId,
-	ModelId,
-	CanBeSwapped,
-	PointsValue)
-VALUES (
-	@TzaangorBladeId,
-	@TzaangorId,
-	0,
-	0)
-
-INSERT INTO ModelWeapon (
-	WeaponId,
-	ModelId,
-	CanBeSwapped,
-	PointsValue)
-VALUES (
-	@TzaangorBladeId,
-	@TwistBrayId,
-	0,
-	0)
 
 
 
@@ -473,7 +369,7 @@ INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength) VA
 INSERT INTO Weapon (WeaponId, AP, Name, WeaponType, Range, Strength) VALUES (@RendingClawsId, 1, 'Rending Claws', 0, 0, 0)
 INSERT INTO Weapon (WeaponId, AP, RandomAttacks, Name, WeaponType, Range, Strength) VALUES (@HandFlamerId, 0, 6, 'Hand Flamer', 1, 12, 3)
 	
-INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@AutoPistolId, @AcolyteHybridLeader, 0, 0, 1)
+INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@AutoPistolId, @AcolyteHybridLeader, 0, 0, 1, 1)
 INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@CultistKnifeId, @AcolyteHybridLeader, 0, 0, 1, 1)
 INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@RendingClawsId, @AcolyteHybridLeader, 0, 0, 1, 1)
 INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, SwappedWithWeaponId, MaximumPerModel) VALUES (@HandFlamerId, @AcolyteHybridLeader, 1, 1, 0, @AutoPistolId, 1)
