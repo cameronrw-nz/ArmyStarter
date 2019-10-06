@@ -271,10 +271,6 @@ INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefault
 
 
 
-
-
-
-
 ---- Genestealer Cult ----
 
 DECLARE @GenestealerCult uniqueidentifier = NEWID();

@@ -122,58 +122,8 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <h3>
-                Squads Average Wounds
-            </h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Stats</th>
-                        <th>Shooting</th>
-                        <th>Melee</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var defendingModel in DefendingModels)
-                    {
-                        <tr>
-                            <td>@defendingModel.Name</td>
-                            <td>@GetDefendingStatsString(defendingModel)</td>
-                            <td>@CalculateWoundsByShooting(defendingModel)</td>
-                            <td>@CalculateWoundsByMelee(defendingModel)</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <h3>
-                Squads Average Wounds Against
-            </h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Stats</th>
-                        <th>Average Wounds</th>
-                        <th>Average Shots To Kill Unit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var attackingModel in AttackingModels)
-                    {
-                        <tr>
-                            <td>@attackingModel.Name</td>
-                            <td>@GetAttackingStatsString(attackingModel)</td>
-                            <td>@CalculateWoundsOnUnit(attackingModel)</td>
-                            <td>@CalculateAverageShotsToKill(attackingModel)</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        <ArmyStarter.Blazor.Shared.UnitDisplay.SquadAverageWounds PlanModels="@PlanUnit.SelectedModels" />
+        <ArmyStarter.Blazor.Shared.UnitDisplay.SquadAverageWoundsAgainst PlanModels="@PlanUnit.SelectedModels" />
     </div>
 </div>
 
@@ -208,11 +158,11 @@
 
             var defendingModels = new List<DefendingModel>()
 {
-                new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5 },
-                new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3 },
-                new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5 },
-                new DefendingModel { Name = "LV", Toughness = 6, ArmourSave = 3 },
-                new DefendingModel { Name = "HV", Toughness = 8, ArmourSave = 3, InvulnerableSave = 4 },
+                new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5, Wounds = 1 },
+                new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3, Wounds = 1 },
+                new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5, Wounds = 2 },
+                new DefendingModel { Name = "LV", Toughness = 6, ArmourSave = 3, Wounds = 10 },
+                new DefendingModel { Name = "HV", Toughness = 8, ArmourSave = 3, InvulnerableSave = 4, Wounds = 24 },
             };
 
             return defendingModels;
@@ -310,7 +260,7 @@
     {
         CalculatorProvider calculatorProvider = new CalculatorProvider();
         decimal totalWounds = 0;
-        foreach (var model in PlanUnit.SelectedModels)
+        foreach (PlanModel model in PlanUnit.SelectedModels)
         {
             var defendingModel = new DefendingModel
             {

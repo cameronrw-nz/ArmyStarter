@@ -1,0 +1,138 @@
+@using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Provider
+@inject HttpClient Http
+
+<div>
+    <h3>
+        Squads Average Wounds Against
+    </h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Stats</th>
+                <th>Average Wounds</th>
+                <th>Average Shots To Kill Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var squadAverageWoundsAgainstDisplay in SquadAverageWoundsAgainstDisplays)
+            {
+                <tr>
+                    <td>@squadAverageWoundsAgainstDisplay.Name</td>
+                    <td>@squadAverageWoundsAgainstDisplay.StatsString</td>
+                    <td>@squadAverageWoundsAgainstDisplay.WoundsOnUnit</td>
+                    <td>@squadAverageWoundsAgainstDisplay.AverageShotsToKill</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    IList<PlanModel> PlanModels { get; set; }
+
+    IList<SquadAverageWoundsAgainstDisplay> SquadAverageWoundsAgainstDisplays { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        var displays = new List<SquadAverageWoundsAgainstDisplay>();
+
+        foreach (AttackingModel attackingModel in AttackingModels)
+        {
+            var woundsOnUnit = CalculateWoundsOnUnit(attackingModel);
+            var averageShotsToKill = CalculateAverageShotsToKill(attackingModel);
+
+            var squadAverageWoundsAgianstDisplay = new SquadAverageWoundsAgainstDisplay
+            {
+                Name = attackingModel.Name,
+                WoundsOnUnit = woundsOnUnit,
+                AverageShotsToKill = averageShotsToKill,
+                StatsString = GetAttackingStatsString(attackingModel)
+            };
+
+            displays.Add(squadAverageWoundsAgianstDisplay);
+        }
+
+        SquadAverageWoundsAgainstDisplays = displays;
+    }
+
+    IList<AttackingModel> AttackingModels
+    {
+        get
+        {
+            CalculatorProvider calculatorProvider = new CalculatorProvider();
+            var guardsman = new DefendingModel { Toughness = 3, ArmourSave = 5 };
+
+            var attackingModels = new List<AttackingModel>()
+            {
+                new AttackingModel{ Name = "GEQ", ToHit = 4, Attacks = 1, AP = 0, Strength = 3 },
+                new AttackingModel{ Name = "MEQ", ToHit = 3, Attacks = 1, AP = 0, Strength = 4 },
+                new AttackingModel{ Name = "Anti-HI", ToHit = 3, Attacks = 1, AP = 1, Strength = 8 },
+                new AttackingModel{ Name = "Anti-Tank", ToHit = 3, Attacks = 1, AP = 3, Strength = 9 },
+            };
+
+            return attackingModels;
+        }
+    }
+
+    string CalculateWoundsOnUnit(AttackingModel attackingModel)
+    {
+        CalculatorProvider calculatorProvider = new CalculatorProvider();
+        decimal totalWounds = 0;
+        foreach (PlanModel model in PlanModels)
+        {
+            var defendingModel = new DefendingModel
+            {
+                ArmourSave = model.Model.ArmourSave,
+                FeelNoPainSave = model.Model.FeelNoPainSave,
+                InvulnerableSave = model.Model.InvulnerableSave,
+                Toughness = model.Model.Toughness,
+                Name = model.Model.Name
+            };
+            totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+        }
+
+        totalWounds = totalWounds / PlanModels.Count;
+
+        return totalWounds.ToString("0.##");
+    }
+
+    string CalculateAverageShotsToKill(AttackingModel attackingModel)
+    {
+        CalculatorProvider calculatorProvider = new CalculatorProvider();
+        decimal totalNumberOfShots = 0;
+        foreach (var model in PlanModels)
+        {
+            var defendingModel = new DefendingModel
+            {
+                ArmourSave = model.Model.ArmourSave,
+                FeelNoPainSave = model.Model.FeelNoPainSave,
+                InvulnerableSave = model.Model.InvulnerableSave,
+                Toughness = model.Model.Toughness,
+                Name = model.Model.Name
+            };
+
+            totalNumberOfShots += model.NumberOfModels / calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+        }
+
+        return Math.Round(totalNumberOfShots).ToString();
+    }
+
+    string GetAttackingStatsString(AttackingModel attackingModel)
+    {
+        string stats = $"BS{attackingModel.ToHit}+";
+        if (attackingModel.Strength != 0)
+        {
+            stats += $"/S{attackingModel.Strength}";
+        }
+
+        if (attackingModel.AP != 0)
+        {
+            stats += $"/AP{attackingModel.AP}-";
+        }
+
+        return stats;
+    }
+}

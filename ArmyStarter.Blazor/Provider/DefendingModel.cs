@@ -11,5 +11,7 @@
         public int? InvulnerableSave { get; set; }
 
         public int? FeelNoPainSave { get; set; }
+
+        public int? Wounds { get; set; }
     }
 }

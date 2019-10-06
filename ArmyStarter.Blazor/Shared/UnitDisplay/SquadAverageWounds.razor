@@ -1,0 +1,148 @@
+@using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Provider
+@inject HttpClient Http
+
+<div>
+    <h3>
+        Squads Average Wounds
+    </h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Stats</th>
+                <th>Shooting</th>
+                <th>Melee</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var modelDisplay in SquadAverageWoundsDisplays)
+            {
+                <tr>
+                    <td>@modelDisplay.Name</td>
+                    <td>@modelDisplay.StatsString</td>
+                    <td>@modelDisplay.ShootingWounds</td>
+                    <td>@modelDisplay.MeleeWounds</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    IList<PlanModel> PlanModels { get; set; }
+
+    IList<SquadAverageWoundsDisplay> SquadAverageWoundsDisplays { get; set; } = new List<SquadAverageWoundsDisplay>();
+
+    protected override void OnParametersSet()
+    {
+        var displays = new List<SquadAverageWoundsDisplay>();
+
+        foreach (DefendingModel defendingModel in DefendingModels)
+        {
+            var shootingWounds = CalculateWoundsByShooting(defendingModel);
+            var meleeWounds = CalculateWoundsByMelee(defendingModel);
+
+            var display = new SquadAverageWoundsDisplay
+            {
+                Name = defendingModel.Name,
+                ShootingWounds = shootingWounds.ToString("0.##"),
+                MeleeWounds = meleeWounds.ToString("0.##"),
+                StatsString = GetDefendingStatsString(defendingModel)
+            };
+
+            displays.Add(display);
+        }
+
+        SquadAverageWoundsDisplays = displays;
+    }
+
+    IList<DefendingModel> DefendingModels
+    {
+        get
+        {
+            CalculatorProvider calculatorProvider = new CalculatorProvider();
+            var guardsman = new DefendingModel { Toughness = 3, ArmourSave = 5 };
+
+            var defendingModels = new List<DefendingModel>()
+        {
+                new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5, Wounds = 1 },
+                new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3, Wounds = 1 },
+                new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5, Wounds = 2 },
+                new DefendingModel { Name = "LV", Toughness = 6, ArmourSave = 3, Wounds = 10 },
+                new DefendingModel { Name = "HV", Toughness = 8, ArmourSave = 3, InvulnerableSave = 4, Wounds = 24 },
+            };
+
+            return defendingModels;
+        }
+    }
+
+    decimal CalculateWoundsByShooting(DefendingModel defendingModel)
+    {
+        CalculatorProvider calculatorProvider = new CalculatorProvider();
+        decimal totalWounds = 0;
+        foreach (var model in PlanModels)
+        {
+            foreach (var modelWeapon in model.PlanModelWeapons.Where(weapon => weapon.Weapon.WeaponType != WeaponType.Melee))
+            {
+                decimal attacks = 0;
+                if (modelWeapon.Weapon.RandomAttacks != null)
+                {
+                    attacks = (((int)modelWeapon.Weapon.RandomAttacks) + 1) / 2;
+                }
+                else
+                {
+                    attacks = modelWeapon.Weapon.Attacks ?? 0;
+                }
+
+                var attackingModel = new AttackingModel
+                {
+                    ToHit = model.Model.BallisticSkill ?? 0,
+                    Strength = modelWeapon.Weapon.Strength,
+                    Attacks = attacks * modelWeapon.Quantity,
+                    AP = modelWeapon.Weapon.AP
+                };
+                totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+            }
+        }
+
+        return totalWounds;
+    }
+
+    decimal CalculateWoundsByMelee(DefendingModel defendingModel)
+    {
+        CalculatorProvider calculatorProvider = new CalculatorProvider();
+        decimal totalWounds = 0;
+        foreach (var model in PlanModels)
+        {
+            var modelWeapon = model.Model.Weapons?.FirstOrDefault(weapon => weapon.Weapon.WeaponType == WeaponType.Melee);
+            var attackingModel = new AttackingModel
+            {
+                ToHit = model.Model.WeaponSkill ?? 0,
+                Strength = model.Model.Strength + (modelWeapon?.Weapon?.Strength ?? 0),
+                Attacks = model.Model.Attacks * model.NumberOfModels,
+                AP = (modelWeapon?.Weapon?.AP ?? 0)
+            };
+            totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+        }
+
+        return totalWounds;
+    }
+
+    string GetDefendingStatsString(DefendingModel defendingModel)
+    {
+        string stats = $"T{defendingModel.Toughness}";
+        if (defendingModel.ArmourSave != null)
+        {
+            stats += $"/{defendingModel.ArmourSave}+";
+        }
+
+        if (defendingModel.InvulnerableSave != null)
+        {
+            stats += $"/{defendingModel.InvulnerableSave}++";
+        }
+
+        return stats;
+    }
+}
