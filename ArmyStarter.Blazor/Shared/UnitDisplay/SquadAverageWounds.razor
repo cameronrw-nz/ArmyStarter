@@ -11,8 +11,8 @@
             <tr>
                 <th>Name</th>
                 <th>Stats</th>
-                <th>Shooting</th>
-                <th>Melee</th>
+                <th>Shooting Killed</th>
+                <th>Melee Killed</th>
             </tr>
         </thead>
         <tbody>
@@ -66,7 +66,7 @@
             var guardsman = new DefendingModel { Toughness = 3, ArmourSave = 5 };
 
             var defendingModels = new List<DefendingModel>()
-        {
+{
                 new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5, Wounds = 1 },
                 new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3, Wounds = 1 },
                 new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5, Wounds = 2 },
@@ -78,10 +78,42 @@
         }
     }
 
+    string ModelsKilled(decimal woundsDealt, int modelWounds)
+    {
+        var modelsKilledString = "";
+
+        var modelsDead = Math.Floor(woundsDealt / modelWounds);
+        if (modelsDead >= 1)
+        {
+            modelsKilledString += $"{modelsDead.ToString()} Dead";
+
+            var remainder = Math.Floor(woundsDealt % modelWounds);
+            if (remainder >= 1)
+            {
+                modelsKilledString += $" - {remainder.ToString()} Wounds";
+            }
+        }
+        else
+        {
+            var remainder = Math.Floor(woundsDealt % modelWounds);
+            if (remainder >= 1)
+            {
+                modelsKilledString += $"{remainder.ToString()} Wounds";
+            }
+        }
+
+
+        return modelsKilledString;
+    }
+
     decimal CalculateWoundsByShooting(DefendingModel defendingModel)
     {
         CalculatorProvider calculatorProvider = new CalculatorProvider();
+
         decimal totalWounds = 0;
+        var modelsKilledString = "";
+        decimal modelsDead = 0;
+
         foreach (var model in PlanModels)
         {
             foreach (var modelWeapon in model.PlanModelWeapons.Where(weapon => weapon.Weapon.WeaponType != WeaponType.Melee))
@@ -103,17 +135,30 @@
                     Attacks = attacks * modelWeapon.Quantity,
                     AP = modelWeapon.Weapon.AP
                 };
-                totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+                var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+                var weaponDamage = modelWeapon.Weapon.RandomDamage != null ? (((int)modelWeapon.Weapon.RandomDamage) + 1) / 2 : modelWeapon.Weapon.Damage ?? 1;
+                if (weaponDamage >= defendingModel.Wounds)
+                {
+                    modelsDead += woundResult;
+                }
+                else
+                {
+                    var woundResultPerTarget = Math.Ceiling((decimal)(defendingModel.Wounds / weaponDamage));
+                    modelsDead += woundResult / woundResultPerTarget;
+                }
             }
         }
 
-        return totalWounds;
+        return modelsDead;
     }
 
     decimal CalculateWoundsByMelee(DefendingModel defendingModel)
     {
         CalculatorProvider calculatorProvider = new CalculatorProvider();
         decimal totalWounds = 0;
+        decimal modelsDead = 0;
         foreach (var model in PlanModels)
         {
             var modelWeapon = model.Model.Weapons?.FirstOrDefault(weapon => weapon.Weapon.WeaponType == WeaponType.Melee);
@@ -124,10 +169,22 @@
                 Attacks = model.Model.Attacks * model.NumberOfModels,
                 AP = (modelWeapon?.Weapon?.AP ?? 0)
             };
-            totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+            var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+            var weaponDamage = modelWeapon.Weapon.RandomDamage != null ? (((int)modelWeapon.Weapon.RandomDamage) + 1) / 2 : modelWeapon.Weapon.Damage ?? 1;
+            if (weaponDamage >= defendingModel.Wounds)
+            {
+                modelsDead += woundResult;
+            }
+            else
+            {
+                var woundResultPerTarget = Math.Ceiling((decimal)(defendingModel.Wounds / weaponDamage));
+                modelsDead += woundResult / woundResultPerTarget;
+            }
         }
 
-        return totalWounds;
+        return modelsDead;
     }
 
     string GetDefendingStatsString(DefendingModel defendingModel)
