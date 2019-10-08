@@ -11,7 +11,9 @@
             <tr>
                 <th>Name</th>
                 <th>Stats</th>
+                <th>Shooting Wounds</th>
                 <th>Shooting Killed</th>
+                <th>Melee Wounds</th>
                 <th>Melee Killed</th>
             </tr>
         </thead>
@@ -22,7 +24,9 @@
                     <td>@modelDisplay.Name</td>
                     <td>@modelDisplay.StatsString</td>
                     <td>@modelDisplay.ShootingWounds</td>
+                    <td>@modelDisplay.ShootingKilled</td>
                     <td>@modelDisplay.MeleeWounds</td>
+                    <td>@modelDisplay.MeleeKilled</td>
                 </tr>
             }
         </tbody>
@@ -47,8 +51,10 @@
             var display = new SquadAverageWoundsDisplay
             {
                 Name = defendingModel.Name,
-                ShootingWounds = shootingWounds.ToString("0.##"),
-                MeleeWounds = meleeWounds.ToString("0.##"),
+                ShootingWounds = shootingWounds.Item2.ToString("0.##"),
+                ShootingKilled = shootingWounds.Item1.ToString("0.##"),
+                MeleeWounds = meleeWounds.Item1.ToString("0.##"),
+                MeleeKilled = meleeWounds.Item2.ToString("0.##"),
                 StatsString = GetDefendingStatsString(defendingModel)
             };
 
@@ -63,10 +69,9 @@
         get
         {
             CalculatorProvider calculatorProvider = new CalculatorProvider();
-            var guardsman = new DefendingModel { Toughness = 3, ArmourSave = 5 };
 
             var defendingModels = new List<DefendingModel>()
-{
+            {
                 new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5, Wounds = 1 },
                 new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3, Wounds = 1 },
                 new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5, Wounds = 2 },
@@ -102,11 +107,10 @@
             }
         }
 
-
         return modelsKilledString;
     }
 
-    decimal CalculateWoundsByShooting(DefendingModel defendingModel)
+    Tuple<decimal, decimal> CalculateWoundsByShooting(DefendingModel defendingModel)
     {
         CalculatorProvider calculatorProvider = new CalculatorProvider();
 
@@ -137,6 +141,7 @@
                 };
 
                 var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+                totalWounds += woundResult;
 
                 var weaponDamage = modelWeapon.Weapon.RandomDamage != null ? (((int)modelWeapon.Weapon.RandomDamage) + 1) / 2 : modelWeapon.Weapon.Damage ?? 1;
                 if (weaponDamage >= defendingModel.Wounds)
@@ -151,10 +156,10 @@
             }
         }
 
-        return modelsDead;
+        return Tuple.Create(modelsDead, totalWounds);
     }
 
-    decimal CalculateWoundsByMelee(DefendingModel defendingModel)
+    Tuple<decimal, decimal> CalculateWoundsByMelee(DefendingModel defendingModel)
     {
         CalculatorProvider calculatorProvider = new CalculatorProvider();
         decimal totalWounds = 0;
@@ -171,8 +176,9 @@
             };
 
             var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+            totalWounds += woundResult;
 
-            var weaponDamage = modelWeapon.Weapon.RandomDamage != null ? (((int)modelWeapon.Weapon.RandomDamage) + 1) / 2 : modelWeapon.Weapon.Damage ?? 1;
+            var weaponDamage = modelWeapon?.Weapon?.RandomDamage != null ? (((int)modelWeapon.Weapon.RandomDamage) + 1) / 2 : modelWeapon?.Weapon?.Damage ?? 1;
             if (weaponDamage >= defendingModel.Wounds)
             {
                 modelsDead += woundResult;
@@ -184,7 +190,7 @@
             }
         }
 
-        return modelsDead;
+        return Tuple.Create(modelsDead, totalWounds);
     }
 
     string GetDefendingStatsString(DefendingModel defendingModel)

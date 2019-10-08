@@ -1,0 +1,32 @@
+@using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Provider
+@inject HttpClient Http
+
+    <tr>
+        <td>@DefendingModel.Name</td>
+        <td><input type="number" min="0" max="20" @bind="@DefendingModel.Toughness" /></td>
+        <td><input type="number" min="0" max="7" @bind="@DefendingModel.ArmourSave" /></td>
+        <td><input type="number" min="0" max="7" @bind="@DefendingModel.InvulnerableSave" /></td>
+        <td><input type="number" min="0" max="7" @bind="@DefendingModel.FeelNoPainSave" /></td>
+        <td>@CalculateWounds()</td>
+    </tr>
+
+@code {
+    [Parameter]
+    DefendingModel DefendingModel { get; set; }
+
+    [Parameter]
+    AttackingModel AttackingModel { get; set; }
+
+    [Parameter]
+    private EventCallback<PlanArmy> DefendingModelChanged { get; set; }
+
+    string CalculateWounds()
+    {
+        Console.WriteLine(AttackingModel);
+        var provider = new CalculatorProvider();
+        var result = provider.GetTotalWoundsResult(AttackingModel, DefendingModel);
+
+        return result.ToString("0.##");
+    }
+}

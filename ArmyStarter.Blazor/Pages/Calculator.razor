@@ -1,49 +1,49 @@
 @page "/calculator"
 @inject HttpClient Http
 @using ArmyStarter.Models;
-@using ArmyStarter.Blazor.Display;
+@using ArmyStarter.Blazor.Provider;
 
 <h1>Calculator</h1>
 
 <div>
-    <ArmyUnitSelector UnitChanged="@SelectUnit" />
-
-    @if (SelectedUnit != null)
-    {
-        <Calculations AttackingUnit="@SelectedUnit" ModelDisplays="@ModelDisplays" />
-    }
+    <ArmyStarter.Blazor.Shared.Calculator.CalculatorAttackingModel AttackingModel="@AttackingModel" />
+    <h2>
+        Defending Models
+    </h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Toughness</th>
+                <th>Armour Save</th>
+                <th>Invulnerable Save</th>
+                <th>Feel No Pain</th>
+                <th>Total Wounds Against Target</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DefendingModel defendingModel in DefendingModels) 
+            {
+                <ArmyStarter.Blazor.Shared.Calculator.CalculatorDefendingModel DefendingModel="@defendingModel" AttackingModel="@AttackingModel" />
+            }
+        </tbody>
+    </table>
 </div>
 
 @code {
-    ArmyStarter.Models.Army[] Armies { get; set; } = new ArmyStarter.Models.Army[0];
-    Unit[] Units { get; set; }
+    AttackingModel AttackingModel { get; set; } = new AttackingModel() { ToHit = 3, Strength = 4, AP = 0, Attacks = 10 };
 
-    ArmyStarter.Models.Army SelectedArmy { get; set; }
-
-    Unit SelectedUnit { get; set; }
+    IList<DefendingModel> DefendingModels { get; set; }
 
     protected override async Task OnInitAsync()
     {
-        Armies = await Http.GetJsonAsync<ArmyStarter.Models.Army[]>(Constants.ArmiesController);
+        DefendingModels = new List<DefendingModel>
+            {
+                new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5, Wounds = 1 },
+                new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3, Wounds = 1 },
+                new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5, Wounds = 2 },
+                new DefendingModel { Name = "LV", Toughness = 6, ArmourSave = 3, Wounds = 10 },
+                new DefendingModel { Name = "HV", Toughness = 8, ArmourSave = 3, InvulnerableSave = 4, Wounds = 24 },
+            };
     }
-
-    private string _selectedArmyId;
-    string SelectedArmyId
-    {
-        get => _selectedArmyId;
-        set
-        {
-            _selectedArmyId = value;
-            var selectedArmyIdGuid = new Guid(value);
-            SelectedArmy = Armies.FirstOrDefault(army => army.ArmyId == selectedArmyIdGuid);
-        }
-    }
-
-    void SelectUnit(Unit unit)
-    {
-        SelectedUnit = unit;
-        ModelDisplays = SelectedUnit.Models.Select(model => new ModelDisplay(model)).ToArray();
-    }
-
-    ModelDisplay[] ModelDisplays { get; set; }
 }

@@ -1,0 +1,33 @@
+@using ArmyStarter.Models;
+@using ArmyStarter.Blazor.Provider
+@inject HttpClient Http
+
+<h2>
+    Attacking Model
+</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Attacks</th>
+            <th>Weapon Skill</th>
+            <th>Strength</th>
+            <th>AP</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="number" min="0" max="6" @bind="@AttackingModel.Attacks" /></td>
+            <td><input type="number" min="0" max="6" @bind="@AttackingModel.ToHit" /></td>
+            <td><input type="number" min="0" max="30" @bind="@AttackingModel.Strength" /></td>
+            <td><input type="number" min="0" max="6" @bind="@AttackingModel.AP" /></td>
+        </tr>
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    AttackingModel AttackingModel { get; set; }
+
+    [Parameter]
+    private EventCallback<PlanArmy> AttackingModelChanged { get; set; }
+}
