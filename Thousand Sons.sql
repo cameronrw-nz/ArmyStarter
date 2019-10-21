@@ -259,7 +259,7 @@ VALUES (
 
 INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength, Damage) VALUES (@InfernoBolterId, 2, 1, 'Inferno Bolter', 3, 24, 4, 1)
 INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength, Damage) VALUES (@InfernoBoltPistolId, 2, 1, 'Inferno Bolt Pistol', 1, 12, 4, 1)
-INSERT INTO Weapon (WeaponId, AP, RandomAttacks, Name, WeaponType, Range, Strength, Damage) VALUES (@WarpFlamerId, 2, 6, 'Warpflamer', 2, 12, 4, 1)
+INSERT INTO Weapon (WeaponId, AP, RandomAttacks, Name, WeaponType, Range, Strength, Damage, IsAutoHitting) VALUES (@WarpFlamerId, 2, 6, 'Warpflamer', 2, 12, 4, 1, 1)
 INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength, Damage) VALUES (@InfernoCombiBolterId, 2, 2, 'Inferno Bolter', 3, 24, 4, 1)
 
 INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength, RandomDamage) VALUES (@ForceSwordId, 3, 0, 'Force Sword', 0, 0, 0, 3)
@@ -371,7 +371,7 @@ VALUES (
 INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength, Damage) VALUES (@AutoPistolId, 0, 1, 'Autopistol', 1, 12, 3, 1)
 INSERT INTO Weapon (WeaponId, AP, Attacks, Name, WeaponType, Range, Strength, Damage) VALUES (@CultistKnifeId, 0, 1, 'Cultist Knife', 0, 0, 0, 1)
 INSERT INTO Weapon (WeaponId, AP, Name, WeaponType, Range, Strength, Damage) VALUES (@RendingClawsId, 1, 'Rending Claws', 0, 0, 0, 1)
-INSERT INTO Weapon (WeaponId, AP, RandomAttacks, Name, WeaponType, Range, Strength, Damage) VALUES (@HandFlamerId, 0, 6, 'Hand Flamer', 1, 12, 3, 1)
+INSERT INTO Weapon (WeaponId, AP, RandomAttacks, Name, WeaponType, Range, Strength, Damage, IsAutoHitting) VALUES (@HandFlamerId, 0, 6, 'Hand Flamer', 1, 12, 3, 1, 1)
 	
 INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@AutoPistolId, @AcolyteHybridLeader, 0, 0, 1, 1)
 INSERT INTO ModelWeapon (WeaponId, ModelId, CanBeSwapped, PointsValue, IsDefaultWeapon, MaximumPerModel) VALUES (@CultistKnifeId, @AcolyteHybridLeader, 0, 0, 1, 1)

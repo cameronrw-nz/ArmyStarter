@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArmyStarter.Blazor.Provider
 {
@@ -9,7 +6,11 @@ namespace ArmyStarter.Blazor.Provider
     {
         public decimal GetTotalWoundsResult(AttackingModel attackingModel, DefendingModel defendingModel)
         {
-            var toHitResult = GetToHitResult(attackingModel.ToHit);
+            var toHitResult = (decimal)1;
+            if (!attackingModel.IsAutoHitting)
+            {
+                toHitResult = GetToHitResult(attackingModel.ToHit);
+            }
             var toWoundResult = GetToWoundResult(attackingModel.Strength, defendingModel.Toughness);
             var saveResult = GetSaveResult(attackingModel.AP, defendingModel.ArmourSave ?? 0, defendingModel.InvulnerableSave ?? 0);
 

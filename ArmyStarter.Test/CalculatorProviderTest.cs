@@ -28,6 +28,16 @@ namespace ArmyStarter.Test
             Assert.AreEqual((decimal)expectedResult, totalWoundsResult);
         }
 
+        [TestMethod]
+        public void AutoHitOnGuardsmenTest()
+        {
+            var attackingModel = new AttackingModel { ToHit = 4, Strength = 6, Attacks = 12M, AP = 2, IsAutoHitting = true };
+            var defendingModel = new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5 };
+            var totalWoundsResult = _calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+            Assert.AreEqual((decimal)10, totalWoundsResult);
+        }
+
         [DataTestMethod]
         [DataRow(1, 6)]
         [DataRow(4, 3)]

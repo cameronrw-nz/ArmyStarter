@@ -125,7 +125,8 @@
                 decimal attacks = 0;
                 if (modelWeapon.Weapon.RandomAttacks != null)
                 {
-                    attacks = (((int)modelWeapon.Weapon.RandomAttacks) + 1) / 2;
+                    attacks = decimal.Divide((int)modelWeapon.Weapon.RandomAttacks + 1, 2);
+                    Console.WriteLine($"{modelWeapon.Weapon.Name} - {modelWeapon.Weapon.RandomAttacks} - {decimal.Divide((int)modelWeapon.Weapon.RandomAttacks + 1, 2)}");
                 }
                 else
                 {
@@ -137,7 +138,8 @@
                     ToHit = model.Model.BallisticSkill ?? 0,
                     Strength = modelWeapon.Weapon.Strength,
                     Attacks = attacks * modelWeapon.Quantity,
-                    AP = modelWeapon.Weapon.AP
+                    AP = modelWeapon.Weapon.AP,
+                    IsAutoHitting = modelWeapon.Weapon.IsAutoHitting
                 };
 
                 var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);

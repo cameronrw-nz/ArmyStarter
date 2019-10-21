@@ -11,5 +11,7 @@
         public decimal Attacks { get; set; }
 
         public int AP { get; set; }
+
+        public bool IsAutoHitting { get; set; }
     }
 }

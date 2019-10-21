@@ -25,6 +25,8 @@ namespace ArmyStarter.Models
 
         public int? RandomDamage { get; set; }
 
+        public bool IsAutoHitting { get; set; }
+
         public virtual IList<ModelWeapon> ModelWeapons { get; set; }
     }
 
