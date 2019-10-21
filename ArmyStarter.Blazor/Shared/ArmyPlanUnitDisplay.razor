@@ -8,6 +8,9 @@
         <span class="card-section-header-right">Pts: @TotalPoints</span>
     </h3>
     <div class="unit-details-content">
+        <h3>
+            Unit
+        </h3>
         <table class="table">
             <thead>
                 <tr>
@@ -59,7 +62,7 @@
                 </h3>
                 <span class="oi oi-pencil align-bottom" @onclick="@ToggleEdittingWeapons" />
             </div>
-            <table>
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Weapon</th>
@@ -72,20 +75,19 @@
                     </tr>
                 </thead>
                 <tbody>
-
                     @if (IsEdittingWeapons)
                     {
 
                         @foreach (var selectedModel in PlanUnit.SelectedModels)
                         {
-                            <tr><td>@selectedModel.Model.Name</td></tr>
+                            <tr><td><b>@selectedModel.Model.Name</b></td></tr>
                             @foreach (var modelWeapon in selectedModel.Model.Weapons)
                             {
                                 <tr>
                                     <td>@modelWeapon.Weapon.Name</td>
                                     <td>
                                         <input class="input"
-                                               max="@(modelWeapon.MaximumPerModel * @selectedModel.NumberOfModels)"
+                                               max="@(modelWeapon.MaximumPerModel * PlanUnit.SelectedModels.Sum(model => model.NumberOfModels))"
                                                min="0"
                                                type="number"
                                                @onchange=@(newValue => ChangeWeaponNumbers(newValue, selectedModel.PlanModelId, modelWeapon.WeaponId))
@@ -93,7 +95,7 @@
                                     </td>
                                     <td>@modelWeapon.PointsValue</td>
                                     <td>@modelWeapon.Weapon.Range"</td>
-                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.WeaponType.ToString() + modelWeapon.Weapon.Attacks : modelWeapon.Weapon.WeaponType.ToString())</td>
+                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.WeaponType.ToString() + " " + modelWeapon.Weapon.Attacks : modelWeapon.Weapon.WeaponType.ToString())</td>
                                     <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.Strength.ToString() : modelWeapon.Weapon.Strength == 0 ? "User" : modelWeapon.Weapon.Strength.ToString())</td>
                                     <td>@(modelWeapon.Weapon.AP > 0 ? -modelWeapon.Weapon.AP : 0)</td>
                                 </tr>
@@ -104,7 +106,7 @@
                     {
                         @foreach (var selectedModel in PlanUnit.SelectedModels)
                         {
-                            <tr><td>@selectedModel.Model.Name</td></tr>
+                            <tr><td><b>@selectedModel.Model.Name</b></td></tr>
                             @foreach (var modelWeapon in selectedModel.Model.Weapons.Where(mw => selectedModel.PlanModelWeapons.FirstOrDefault(pmw => pmw.WeaponId == mw.WeaponId)?.Quantity > 0))
                             {
                                 <tr>
@@ -112,7 +114,7 @@
                                     <td>@GetNumberOfWeapons(modelWeapon)</td>
                                     <td>@modelWeapon.PointsValue</td>
                                     <td>@modelWeapon.Weapon.Range"</td>
-                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.WeaponType.ToString() + modelWeapon.Weapon.Attacks : modelWeapon.Weapon.WeaponType.ToString())</td>
+                                    <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.WeaponType.ToString() + " " + modelWeapon.Weapon.Attacks : modelWeapon.Weapon.WeaponType.ToString())</td>
                                     <td>@(modelWeapon.Weapon.WeaponType != WeaponType.Melee ? modelWeapon.Weapon.Strength.ToString() : modelWeapon.Weapon.Strength == 0 ? "User" : modelWeapon.Weapon.Strength.ToString())</td>
                                     <td>@(modelWeapon.Weapon.AP > 0 ? -modelWeapon.Weapon.AP : 0)</td>
                                 </tr>

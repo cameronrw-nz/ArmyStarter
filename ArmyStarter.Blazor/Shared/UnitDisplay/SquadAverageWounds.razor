@@ -3,10 +3,28 @@
 @inject HttpClient Http
 
 <div>
-    <h3>
-        Squads Average Wounds
-    </h3>
-    <table>
+    <div class="d-flex">
+        <h3>
+            Squads Average Wounds
+        </h3>
+        <span class="oi oi-pencil align-bottom" @onclick="@ToggleIsAlteringSquadEffects" />
+    </div>
+    @if (IsAlteringSquadEffects)
+    {
+        <div>
+
+            <div>
+                <input type="checkbox" @bind="IsWithinHalfRange" /> Is within half Range
+            </div>
+            <div>
+                <input type="checkbox" @bind="IsRerolling1s" /> Is Rerolling 1's to Hit
+            </div>
+            <div>
+                <input type="checkbox" @bind="IsRerollingHits" /> Is Rerolling Hits
+            </div>
+        </div>
+    }
+    <table class="table">
         <thead>
             <tr>
                 <th>Name</th>
@@ -34,12 +52,58 @@
 </div>
 
 @code {
+    private bool _isWithinHalfRange;
+    private bool _isRerolling1s;
+    private bool _isRerollingHits;
+
     [Parameter]
     IList<PlanModel> PlanModels { get; set; }
 
     IList<SquadAverageWoundsDisplay> SquadAverageWoundsDisplays { get; set; } = new List<SquadAverageWoundsDisplay>();
 
+    bool IsAlteringSquadEffects { get; set; }
+
+    bool IsWithinHalfRange
+    {
+        get => _isWithinHalfRange;
+        set
+        {
+            _isWithinHalfRange = !_isWithinHalfRange;
+            Refresh();
+        }
+    }
+
+    bool IsRerolling1s
+    {
+        get => _isRerolling1s;
+        set
+        {
+            _isRerolling1s = !_isRerolling1s;
+            Refresh();
+        }
+    }
+
+    bool IsRerollingHits
+    {
+        get => _isRerollingHits;
+        set
+        {
+            _isRerollingHits = !_isRerollingHits;
+            Refresh();
+        }
+    }
+
+    void ToggleIsAlteringSquadEffects()
+    {
+        IsAlteringSquadEffects = !IsAlteringSquadEffects;
+    }
+
     protected override void OnParametersSet()
+    {
+        Refresh();
+    }
+
+    void Refresh()
     {
         var displays = new List<SquadAverageWoundsDisplay>();
 
@@ -53,8 +117,8 @@
                 Name = defendingModel.Name,
                 ShootingWounds = shootingWounds.Item2.ToString("0.##"),
                 ShootingKilled = shootingWounds.Item1.ToString("0.##"),
-                MeleeWounds = meleeWounds.Item1.ToString("0.##"),
-                MeleeKilled = meleeWounds.Item2.ToString("0.##"),
+                MeleeWounds = meleeWounds.Item2.ToString("0.##"),
+                MeleeKilled = meleeWounds.Item1.ToString("0.##"),
                 StatsString = GetDefendingStatsString(defendingModel)
             };
 
@@ -71,7 +135,7 @@
             CalculatorProvider calculatorProvider = new CalculatorProvider();
 
             var defendingModels = new List<DefendingModel>()
-            {
+{
                 new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5, Wounds = 1 },
                 new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3, Wounds = 1 },
                 new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5, Wounds = 2 },
@@ -126,11 +190,11 @@
                 if (modelWeapon.Weapon.RandomAttacks != null)
                 {
                     attacks = decimal.Divide((int)modelWeapon.Weapon.RandomAttacks + 1, 2);
-                    Console.WriteLine($"{modelWeapon.Weapon.Name} - {modelWeapon.Weapon.RandomAttacks} - {decimal.Divide((int)modelWeapon.Weapon.RandomAttacks + 1, 2)}");
                 }
                 else
                 {
-                    attacks = modelWeapon.Weapon.Attacks ?? 0;
+                    Console.WriteLine($"{IsWithinHalfRange} -{ (decimal)(IsWithinHalfRange && modelWeapon.Weapon.WeaponType == WeaponType.RapidFire ? modelWeapon.Weapon.Attacks * 2 : modelWeapon.Weapon.Attacks ?? 0)}");
+                    attacks = (decimal)(IsWithinHalfRange && modelWeapon.Weapon.WeaponType == WeaponType.RapidFire ? modelWeapon.Weapon.Attacks * 2 : modelWeapon.Weapon.Attacks ?? 0);
                 }
 
                 var attackingModel = new AttackingModel
@@ -139,7 +203,8 @@
                     Strength = modelWeapon.Weapon.Strength,
                     Attacks = attacks * modelWeapon.Quantity,
                     AP = modelWeapon.Weapon.AP,
-                    IsAutoHitting = modelWeapon.Weapon.IsAutoHitting
+                    IsAutoHitting = modelWeapon.Weapon.IsAutoHitting,
+                    IsRerollingHits = IsRerollingHits
                 };
 
                 var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
@@ -174,7 +239,9 @@
                 ToHit = model.Model.WeaponSkill ?? 0,
                 Strength = model.Model.Strength + (modelWeapon?.Weapon?.Strength ?? 0),
                 Attacks = model.Model.Attacks * model.NumberOfModels,
-                AP = (modelWeapon?.Weapon?.AP ?? 0)
+                AP = (modelWeapon?.Weapon?.AP ?? 0),
+                IsAutoHitting = modelWeapon?.Weapon?.IsAutoHitting ?? false,
+                IsRerollingHits = IsRerollingHits
             };
 
             var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);

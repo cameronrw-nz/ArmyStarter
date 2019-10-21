@@ -13,5 +13,7 @@
         public int AP { get; set; }
 
         public bool IsAutoHitting { get; set; }
+
+        public bool IsRerollingHits { get; set; }
     }
 }

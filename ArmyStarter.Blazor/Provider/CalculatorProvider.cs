@@ -9,7 +9,7 @@ namespace ArmyStarter.Blazor.Provider
             var toHitResult = (decimal)1;
             if (!attackingModel.IsAutoHitting)
             {
-                toHitResult = GetToHitResult(attackingModel.ToHit);
+                toHitResult = GetToHitResult(attackingModel.ToHit, attackingModel.IsRerollingHits);
             }
             var toWoundResult = GetToWoundResult(attackingModel.Strength, defendingModel.Toughness);
             var saveResult = GetSaveResult(attackingModel.AP, defendingModel.ArmourSave ?? 0, defendingModel.InvulnerableSave ?? 0);
@@ -17,7 +17,7 @@ namespace ArmyStarter.Blazor.Provider
             return Math.Round(toHitResult * toWoundResult * saveResult * attackingModel.Attacks, 2);
         }
 
-        public decimal GetToHitResult(int toHit, int toHitModifier = 0)
+        public decimal GetToHitResult(int toHit, bool isRerollingHits, int toHitModifier = 0)
         {
             var requiredToHit = toHit + toHitModifier;
 
@@ -26,7 +26,13 @@ namespace ArmyStarter.Blazor.Provider
                 return 0;
             }
 
-            return decimal.Divide(7 - requiredToHit, 6);
+            var hitResult = decimal.Divide(7 - requiredToHit, 6);
+            if(isRerollingHits)
+            {
+                hitResult = hitResult + decimal.Divide(5-requiredToHit, 6) * hitResult;
+            }
+
+            return hitResult;
         }
 
         public decimal GetToWoundResult(int strength, int toughness, int toWoundModifier = 0)

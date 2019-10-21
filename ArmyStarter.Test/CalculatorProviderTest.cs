@@ -44,9 +44,17 @@ namespace ArmyStarter.Test
         [DataRow(6, 1)]
         public void ToHitResultTest(int toHit, int expectedResult)
         {
-            var toHitResult = _calculatorProvider.GetToHitResult(toHit);
+            var toHitResult = _calculatorProvider.GetToHitResult(toHit, false);
 
             Assert.AreEqual(decimal.Divide(expectedResult, 6), toHitResult);
+        }
+
+        [TestMethod]
+        public void ToHitResultsTestWithRerollingAll()
+        {
+            var toHitResult = _calculatorProvider.GetToHitResult(3, true);
+
+            Assert.AreEqual(decimal.Divide(), toHitResult);
         }
 
         [DataTestMethod]
