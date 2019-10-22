@@ -233,21 +233,21 @@
         decimal modelsDead = 0;
         foreach (var model in PlanModels)
         {
-            var modelWeapon = model.Model.Weapons?.FirstOrDefault(weapon => weapon.Weapon.WeaponType == WeaponType.Melee);
+            var planModelWeapon = model.PlanModelWeapons?.FirstOrDefault(pmw => pmw.Weapon.WeaponType == WeaponType.Melee && pmw.Quantity > 0);
             var attackingModel = new AttackingModel
             {
                 ToHit = model.Model.WeaponSkill ?? 0,
-                Strength = model.Model.Strength + (modelWeapon?.Weapon?.Strength ?? 0),
+                Strength = model.Model.Strength + (planModelWeapon?.Weapon?.Strength ?? 0),
                 Attacks = model.Model.Attacks * model.NumberOfModels,
-                AP = (modelWeapon?.Weapon?.AP ?? 0),
-                IsAutoHitting = modelWeapon?.Weapon?.IsAutoHitting ?? false,
+                AP = (planModelWeapon?.Weapon?.AP ?? 0),
+                IsAutoHitting = planModelWeapon?.Weapon?.IsAutoHitting ?? false,
                 IsRerollingHits = IsRerollingHits
             };
 
             var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
             totalWounds += woundResult;
 
-            var weaponDamage = modelWeapon?.Weapon?.RandomDamage != null ? (((int)modelWeapon.Weapon.RandomDamage) + 1) / 2 : modelWeapon?.Weapon?.Damage ?? 1;
+            var weaponDamage = planModelWeapon?.Weapon?.RandomDamage != null ? (((int)planModelWeapon.Weapon.RandomDamage) + 1) / 2 : planModelWeapon?.Weapon?.Damage ?? 1;
             if (weaponDamage >= defendingModel.Wounds)
             {
                 modelsDead += woundResult;
