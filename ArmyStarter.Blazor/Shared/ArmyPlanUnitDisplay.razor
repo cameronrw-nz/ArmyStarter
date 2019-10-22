@@ -173,6 +173,7 @@
             }
             selectedModel.NumberOfModels = newNumberOfModels;
         }
+        PlanUnitChanged.InvokeAsync(PlanUnit);
     }
 
     int GetNumberOfWeapons(ModelWeapon modelWeapon)
@@ -208,7 +209,6 @@
         {
             selectedModel.PlanModelWeapons.Add(new PlanModelWeapon { PlanModelId = planModelId, WeaponId = weaponId, Weapon = modelWeapon?.Weapon, Quantity = int.Parse(value.Value.ToString()) });
         }
-
         PlanUnitChanged.InvokeAsync(PlanUnit);
     }
 }

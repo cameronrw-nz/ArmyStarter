@@ -10,6 +10,7 @@
     <div class="d-flex">
         <h2>
             Points:
+            @ArmyPoints /
             @if (!IsEditingPoints)
             {
                 @PlanArmy.PointsLimit
@@ -33,9 +34,9 @@
     <ArmyPlanEditingSection @bind-PlanArmy="@PlanArmy" />
 }
 
-<ArmyPlanUnitsDisplay @bind-PlanArmy="@PlanArmy" />
-
 <ArmyPlanAddUnit @bind-PlanArmy="@PlanArmy" />
+
+<ArmyPlanUnitsDisplay @bind-PlanArmy="@PlanArmy" />
 
 @code {
     [Parameter]
@@ -49,6 +50,8 @@
     bool IsEditingPlanArmyInfo { get; set; } = true;
 
     bool IsEditingPoints { get; set; } = true;
+
+    int ArmyPoints => PlanArmy.PlanUnits.Sum(unit => unit.SelectedModels.Sum(model => model.Model.PointsValue * model.NumberOfModels + model.PlanModelWeapons.Sum(weapon => weapon.Quantity * model.Model.Weapons.First(w => w.WeaponId == weapon.WeaponId).PointsValue)));
 
     string Header => PlanArmy.Name ?? "Create Army Plan";
 
