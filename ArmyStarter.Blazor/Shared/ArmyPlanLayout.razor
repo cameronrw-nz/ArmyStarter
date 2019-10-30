@@ -1,13 +1,13 @@
 @using ArmyStarter.Models;
 
 <div class="d-flex justify-content-between">
-    <div class="d-flex">
+    <div class="header">
         <h1>
             @Header
         </h1>
-        <span class="oi oi-pencil align-bottom" @onclick="@ToggleEditPlanArmyInfo" />
+        <span class="oi oi-pencil" @onclick="@ToggleEditPlanArmyInfo" />
     </div>
-    <div class="d-flex">
+    <div class="header">
         <h2>
             Points:
             @ArmyPoints /
@@ -20,7 +20,7 @@
         {
             <input class="input" @bind="@PlanArmy.PointsLimit" />
         }
-        <span class="oi oi-pencil align-bottom" @onclick="@TogglePoints" />
+        <span class="oi oi-pencil" @onclick="@TogglePoints" />
     </div>
 </div>
 
