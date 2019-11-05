@@ -16,10 +16,22 @@
     </thead>
     <tbody>
         <tr>
-            <td><input type="number" min="0" max="6" @bind="@AttackingModel.Attacks" /></td>
-            <td><input type="number" min="0" max="6" @bind="@AttackingModel.ToHit" /></td>
-            <td><input type="number" min="0" max="30" @bind="@AttackingModel.Strength" /></td>
-            <td><input type="number" min="0" max="6" @bind="@AttackingModel.AP" /></td>
+            <td><input type="number" min="0" value="@AttackingModel.Attacks" @onchange="@(newVal => {
+                                                                                              AttackingModel.Attacks = decimal.Parse(newVal.Value.ToString());
+                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                          })" /></td>
+            <td><input type="number" min="0" max="6" value="@AttackingModel.ToHit"@onchange="@(newVal => {
+                                                                                              AttackingModel.ToHit= int.Parse(newVal.Value.ToString());
+                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                          })" /></td>
+            <td><input type="number" min="0" max="30" value="@AttackingModel.Strength" @onchange="@(newVal => {
+                                                                                              AttackingModel.Strength = int.Parse(newVal.Value.ToString());
+                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                          })"/></td>
+            <td><input type="number" min="0" max="6" value="@AttackingModel.AP" @onchange="@(newVal => {
+                                                                                              AttackingModel.AP = int.Parse(newVal.Value.ToString());
+                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                          })"/></td>
         </tr>
     </tbody>
 </table>
@@ -29,5 +41,5 @@
     AttackingModel AttackingModel { get; set; }
 
     [Parameter]
-    private EventCallback<PlanArmy> AttackingModelChanged { get; set; }
+    private EventCallback<AttackingModel> AttackingModelChanged { get; set; }
 }
