@@ -14,7 +14,7 @@ namespace ArmyStarter.Blazor.Provider
             var toWoundResult = GetToWoundResult(attackingModel.Strength, defendingModel.Toughness);
             var saveResult = GetSaveResult(attackingModel.AP, defendingModel.ArmourSave ?? 0, defendingModel.InvulnerableSave ?? 0);
 
-            return Math.Round(toHitResult * toWoundResult * saveResult * attackingModel.Attacks, 2);
+            return Math.Round(toHitResult * toWoundResult * saveResult * attackingModel.Attacks, 2) * attackingModel.Damage;
         }
 
         public decimal GetToHitResult(int toHit, bool isRerollingHits, int toHitModifier = 0)

@@ -2,44 +2,62 @@
 @using ArmyStarter.Blazor.Provider
 @inject HttpClient Http
 
-<h2>
-    Attacking Model
-</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Attacks</th>
-            <th>Weapon Skill</th>
-            <th>Strength</th>
-            <th>AP</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><input type="number" min="0" value="@AttackingModel.Attacks" @onchange="@(newVal => {
-                                                                                              AttackingModel.Attacks = decimal.Parse(newVal.Value.ToString());
-                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
-                                                                                          })" /></td>
-            <td><input type="number" min="0" max="6" value="@AttackingModel.ToHit"@onchange="@(newVal => {
-                                                                                              AttackingModel.ToHit= int.Parse(newVal.Value.ToString());
-                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
-                                                                                          })" /></td>
-            <td><input type="number" min="0" max="30" value="@AttackingModel.Strength" @onchange="@(newVal => {
-                                                                                              AttackingModel.Strength = int.Parse(newVal.Value.ToString());
-                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
-                                                                                          })"/></td>
-            <td><input type="number" min="0" max="6" value="@AttackingModel.AP" @onchange="@(newVal => {
-                                                                                              AttackingModel.AP = int.Parse(newVal.Value.ToString());
-                                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
-                                                                                          })"/></td>
-        </tr>
-    </tbody>
-</table>
+
+<tr>
+    <td>
+        <input type="number" min="0" value="@AttackingModel.NumberOfModels" @onchange="@(newVal => {
+                                                                              AttackingModel.NumberOfModels = int.Parse(newVal.Value.ToString());
+                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                          })" />
+    </td>
+    <td>
+        <input type="number" min="0" value="@AttackingModel.AttacksPerModel" @onchange="@(newVal => {
+                                                                              AttackingModel.AttacksPerModel = int.Parse(newVal.Value.ToString());
+                                                                              AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                          })" />
+    </td>
+
+    <td>@AttackingModel.Attacks</td>
+    <td>
+        <input type="number" min="0" max="6" value="@AttackingModel.ToHit" @onchange="@(newVal => {
+                                                                                        AttackingModel.ToHit= int.Parse(newVal.Value.ToString());
+                                                                                        AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                    })" />
+    </td>
+    <td>
+        <input type="number" min="0" max="30" value="@AttackingModel.Strength" @onchange="@(newVal => {
+                                                                                        AttackingModel.Strength = int.Parse(newVal.Value.ToString());
+                                                                                        AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                    })" />
+    </td>
+    <td>
+        <input type="number" min="0" max="6" value="@AttackingModel.AP" @onchange="@(newVal => {
+                                                                                        AttackingModel.AP = int.Parse(newVal.Value.ToString());
+                                                                                        AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                    })" />
+    </td>
+    <td>
+        <input type="number" min="0" max="6" value="@AttackingModel.Damage" @onchange="@(newVal => {
+                                                                                        AttackingModel.Damage = int.Parse(newVal.Value.ToString());
+                                                                                        AttackingModelChanged.InvokeAsync(AttackingModel);
+                                                                                    })" />
+    </td>
+    <td><button onclick="@OnCopyButtonClicked">Copy</button></td>
+</tr>
+
 
 @code {
     [Parameter]
     AttackingModel AttackingModel { get; set; }
 
     [Parameter]
+    EventCallback OnCopy { get; set; }
+
+    [Parameter]
     private EventCallback<AttackingModel> AttackingModelChanged { get; set; }
+
+    public void OnCopyButtonClicked(UIMouseEventArgs args)
+    {
+        OnCopy.InvokeAsync(null);
+    }
 }

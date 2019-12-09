@@ -6,7 +6,32 @@
 <h1>Calculator</h1>
 
 <div>
-    <ArmyStarter.Blazor.Shared.Calculator.CalculatorAttackingModel @bind-AttackingModel="@AttackingModel" />
+    <h2>
+        Attacking Model
+    </h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number Of Models</th>
+                <th>Attacks Per Model</th>
+                <th>Total Attacks</th>
+                <th>Weapon Skill</th>
+                <th>Strength</th>
+                <th>AP</th>
+                <th>Damage</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < AttackingModels.Count; i++)
+            {
+                var x = AttackingModels[i];
+                <ArmyStarter.Blazor.Shared.Calculator.CalculatorAttackingModel @bind-AttackingModel="@x" OnCopy=@(() => CopyAttackingModel(x)) />
+            }
+        </tbody>
+    </table>
+    <button class="oi-plus" @onclick="@AddAttackingModel">
+        Add
+    </button>
     <h2>
         Defending Models
     </h2>
@@ -18,32 +43,54 @@
                 <th>Armour Save</th>
                 <th>Invulnerable Save</th>
                 <th>Feel No Pain</th>
-                <th>Total Wounds Against Target</th>
+                @foreach (AttackingModel attackingModel in AttackingModels)
+                {
+                    <th>@attackingModel.Name</th>
+                }
             </tr>
         </thead>
         <tbody>
-            @foreach (DefendingModel defendingModel in DefendingModels) 
+            @foreach (DefendingModel defendingModel in DefendingModels)
             {
-                <ArmyStarter.Blazor.Shared.Calculator.CalculatorDefendingModel DefendingModel="@defendingModel" AttackingModel="@AttackingModel" />
+                <ArmyStarter.Blazor.Shared.Calculator.CalculatorDefendingModel DefendingModel="@defendingModel" AttackingModels="@AttackingModels" />
             }
         </tbody>
     </table>
 </div>
 
 @code {
-    AttackingModel AttackingModel { get; set; } = new AttackingModel() { ToHit = 3, Strength = 4, AP = 0, Attacks = 10 };
+    IList<AttackingModel> AttackingModels { get; set; } = new List<AttackingModel>() { new AttackingModel() { Name = "1", ToHit = 3, Strength = 4, AP = 0, NumberOfModels = 10, AttacksPerModel = 1, Damage = 1 } };
 
     IList<DefendingModel> DefendingModels { get; set; }
 
     protected override async Task OnInitAsync()
     {
         DefendingModels = new List<DefendingModel>
-            {
+    {
                 new DefendingModel { Name = "GEQ", Toughness = 3, ArmourSave = 5, Wounds = 1 },
                 new DefendingModel { Name = "MEQ", Toughness = 4, ArmourSave = 3, Wounds = 1 },
                 new DefendingModel { Name = "TEQ", Toughness = 4, ArmourSave = 2, InvulnerableSave = 5, Wounds = 2 },
                 new DefendingModel { Name = "LV", Toughness = 6, ArmourSave = 3, Wounds = 10 },
                 new DefendingModel { Name = "HV", Toughness = 8, ArmourSave = 3, InvulnerableSave = 4, Wounds = 24 },
             };
+    }
+
+    public void AddAttackingModel()
+    {
+        AttackingModels.Add(new AttackingModel() { Name = (AttackingModels.Count + 1).ToString(), ToHit = 3, Strength = 4, AP = 0, NumberOfModels = 10, AttacksPerModel = 1, Damage = 1 });
+    }
+
+    public void CopyAttackingModel(AttackingModel attackingModel)
+    {
+        var copyModel = new AttackingModel() { 
+            Name = (AttackingModels.Count + 1).ToString(), 
+            ToHit = attackingModel.ToHit,
+            Strength = attackingModel.Strength, 
+            AP = attackingModel.AP, 
+            NumberOfModels = attackingModel.NumberOfModels, 
+            AttacksPerModel = attackingModel.AttacksPerModel, 
+            Damage = attackingModel.Damage 
+        };
+        AttackingModels.Add(copyModel);
     }
 }

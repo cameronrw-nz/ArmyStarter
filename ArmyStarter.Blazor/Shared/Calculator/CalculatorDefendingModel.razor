@@ -8,7 +8,10 @@
         <td><input type="number" min="0" max="7" @bind="@DefendingModel.ArmourSave" /></td>
         <td><input type="number" min="0" max="7" @bind="@DefendingModel.InvulnerableSave" /></td>
         <td><input type="number" min="0" max="7" @bind="@DefendingModel.FeelNoPainSave" /></td>
-        <td>@CalculateWounds()</td>
+        @foreach (AttackingModel attackingModel in AttackingModels)
+        {
+            <td>@CalculateWounds(attackingModel)</td>
+        }
     </tr>
 
 @code {
@@ -16,17 +19,16 @@
     DefendingModel DefendingModel { get; set; }
 
     [Parameter]
-    AttackingModel AttackingModel { get; set; }
+    IList<AttackingModel> AttackingModels { get; set; }
 
     [Parameter]
     private EventCallback<PlanArmy> DefendingModelChanged { get; set; }
 
-    string CalculateWounds()
+    string CalculateWounds(AttackingModel attackingModel)
     {
-        Console.WriteLine(AttackingModel);
         var provider = new CalculatorProvider();
-        var result = provider.GetTotalWoundsResult(AttackingModel, DefendingModel);
+        var result = provider.GetTotalWoundsResult(attackingModel, DefendingModel);
 
-        return result.ToString("0.##");
+        return result.ToString("0.#");
     }
 }
