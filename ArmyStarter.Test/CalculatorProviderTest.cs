@@ -52,9 +52,9 @@ namespace ArmyStarter.Test
         [TestMethod]
         public void ToHitResultsTestWithRerollingAll()
         {
-            var toHitResult = _calculatorProvider.GetToHitResult(3, true);
+            var toHitResult = _calculatorProvider.GetToHitResult(4, true);
 
-            Assert.AreEqual(decimal.Divide(), toHitResult);
+            Assert.AreEqual(0.75m, toHitResult);
         }
 
         [DataTestMethod]

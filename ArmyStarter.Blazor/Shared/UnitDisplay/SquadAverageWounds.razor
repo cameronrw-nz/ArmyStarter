@@ -204,7 +204,8 @@
                     Attacks = attacks * modelWeapon.Quantity,
                     AP = modelWeapon.Weapon.AP,
                     IsAutoHitting = modelWeapon.Weapon.IsAutoHitting,
-                    IsRerollingHits = IsRerollingHits
+                    IsRerollingHits = IsRerollingHits,
+                    Damage = modelWeapon.Weapon.Damage
                 };
 
                 var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
@@ -241,7 +242,8 @@
                 Attacks = model.Model.Attacks * model.NumberOfModels,
                 AP = (planModelWeapon?.Weapon?.AP ?? 0),
                 IsAutoHitting = planModelWeapon?.Weapon?.IsAutoHitting ?? false,
-                IsRerollingHits = IsRerollingHits
+                IsRerollingHits = IsRerollingHits,
+                Damage = planModelWeapon?.Weapon?.Damage
             };
 
             var woundResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);

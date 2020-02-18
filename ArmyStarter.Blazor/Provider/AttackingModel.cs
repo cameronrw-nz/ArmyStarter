@@ -15,7 +15,7 @@
 
         public int AP { get; set; }
 
-        public int Damage { get; set; }
+        public int? Damage { get; set; }
 
         public bool IsAutoHitting { get; set; }
 

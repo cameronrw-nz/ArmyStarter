@@ -6,7 +6,7 @@
 
         public const string BaseUrl = "api/";
 
-        public const string RootUrl = HostUrl+BaseUrl;
+        public const string RootUrl = HostUrl + BaseUrl;
 
         public const string ArmiesRoute = "armies";
 

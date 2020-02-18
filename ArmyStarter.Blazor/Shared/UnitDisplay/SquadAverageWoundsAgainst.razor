@@ -67,10 +67,10 @@
 
             var attackingModels = new List<AttackingModel>()
             {
-                new AttackingModel{ Name = "GEQ", ToHit = 4, Attacks = 1, AP = 0, Strength = 3 },
-                new AttackingModel{ Name = "MEQ", ToHit = 3, Attacks = 1, AP = 0, Strength = 4 },
-                new AttackingModel{ Name = "Anti-HI", ToHit = 3, Attacks = 1, AP = 1, Strength = 8 },
-                new AttackingModel{ Name = "Anti-Tank", ToHit = 3, Attacks = 1, AP = 3, Strength = 9 },
+                new AttackingModel{ Name = "GEQ", ToHit = 4, Attacks = 1, AP = 0, Strength = 3, Damage = 1 },
+                new AttackingModel{ Name = "MEQ", ToHit = 3, Attacks = 1, AP = 0, Strength = 4, Damage = 1 },
+                new AttackingModel{ Name = "Anti-HI", ToHit = 3, Attacks = 1, AP = 1, Strength = 8, Damage = 2 },
+                new AttackingModel{ Name = "Anti-Tank", ToHit = 3, Attacks = 1, AP = 3, Strength = 9, Damage = 3 },
             };
 
             return attackingModels;
@@ -91,10 +91,15 @@
                 Toughness = model.Model.Toughness,
                 Name = model.Model.Name
             };
-            totalWounds += calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+
+            var totalWoundsResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+            totalWounds += totalWoundsResult != 0 ?  model.NumberOfModels / totalWoundsResult : 0;
+            Console.WriteLine(totalWoundsResult);
+            Console.WriteLine(model.NumberOfModels);
+
         }
 
-        totalWounds = totalWounds / PlanModels.Count;
+        totalWounds = totalWounds / (PlanModels.Count != 0 ? PlanModels.Count : 1);
 
         return totalWounds.ToString("0.##");
     }
@@ -114,7 +119,8 @@
                 Name = model.Model.Name
             };
 
-            totalNumberOfShots += model.NumberOfModels / calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+            var totalWoundsResult = calculatorProvider.GetTotalWoundsResult(attackingModel, defendingModel);
+            totalNumberOfShots += totalWoundsResult != 0 ?  model.NumberOfModels / totalWoundsResult : 0;
         }
 
         return Math.Round(totalNumberOfShots).ToString();
